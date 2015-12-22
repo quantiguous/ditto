@@ -1,0 +1,3 @@
+class XpathMatch < Match
+  
+end
