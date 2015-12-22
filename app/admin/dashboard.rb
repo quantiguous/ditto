@@ -6,7 +6,7 @@ ActiveAdmin.register_page "Dashboard" do
     columns do
       column do
         panel "Info" do
-          para "Welcome to Generic App Admin."
+          para "Welcome to Ditto Admin."
         end
         panel "Session" do
           ul do

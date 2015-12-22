@@ -1,9 +1,9 @@
 %a.brand{:href => "/"}
-  Generic App
+  Ditto
 - unless current_user.nil?
   %span.caption
     .brand_name
-      &nbsp;Generic App&nbsp;
+      &nbsp;Ditto&nbsp;
   %form.search{:action => "/"}
     %input.search-query{:name => "search", :placeholder => "Search", :type => "text", :autocomplete=>"off", :style => "width: 100px;"}
   %ul.nav
@@ -19,6 +19,6 @@
 - else
   %span.caption
     .brand_name
-      &nbsp;&nbsp; Generic App &nbsp
+      &nbsp;&nbsp; Ditto &nbsp
 :javascript
   $('.search-query').placeholder();

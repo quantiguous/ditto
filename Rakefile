@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-GenericApp::Application.load_tasks
+Ditto::Application.load_tasks

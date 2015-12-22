@@ -9,7 +9,7 @@ ActiveAdmin.setup do |config|
   # for each of the active admin pages.
   #
   config.download_links = [:csv]
-  config.site_title = "Generic App"
+  config.site_title = "Ditto"
   config.comments = false
   # config.csv_options = { :col_sep => ';' }
 
@@ -261,7 +261,7 @@ module Formtastic
           prev.merge(
             :id   => nil,
             :name => nil,
-            :for  => input_html_options[:id].to_s + "-generic_app"
+            :for  => input_html_options[:id].to_s + "-ditto"
           )
         )
       end

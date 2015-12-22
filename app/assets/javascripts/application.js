@@ -15,6 +15,7 @@
 //= require jquery_ujs
 //= require jquery.flot
 //= require generic-app
+//= require jquery_nested_form
 //= require_tree .
 //= require jquery.superfish
 //= require languages/jquery.validationEngine-en
