@@ -12,7 +12,7 @@ class RoutesController < ApplicationController
         if req_obj.is_a?(Hash) and req_obj[:error].present?
           render status: 400, text: "Bad Request."
         else
-          response = route.find_matching_reply(req_obj, params[:content_type])
+          response = route.find_matching_reply(req_obj, params[:content_type], params[:accept])
           if response.nil? 
             render status: 409, text: "No Response found." 
           else

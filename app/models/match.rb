@@ -1,4 +1,4 @@
 class Match < ActiveRecord::Base
   belongs_to :matcher
-  belongs_to :response
+  has_one :response
 end

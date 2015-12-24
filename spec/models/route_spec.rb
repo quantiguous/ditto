@@ -34,7 +34,7 @@ describe Route do
   end
 
     context "find_matching_reply" do
-    it "should return matching reply corresponding to the first matcher" do
+    it "should return matching reply corresponding to the first matcher based on matching content type" do
       route = Factory(:route, :uri => "abc", :http_method => "POST", :kind => "SOAP")
       matcher1 = Factory(:matcher, :route_id => route.id)
       matcher2 = Factory(:matcher, :route_id => route.id)
@@ -48,9 +48,51 @@ describe Route do
       response3 = Factory(:response, :content_type => "text/json", :matcher_id => matcher2.id) 
       response4 = Factory(:response, :content_type => "text/xml", :matcher_id => matcher2.id)
 
-      route.find_matching_reply(Oga.parse_xml("<root><abc>123</abc><xyz>444</xyz></root>"), "text/xml").should == response2
+      route.find_matching_reply(Oga.parse_xml("<root><abc>123</abc><xyz>444</xyz></root>"), "text/xml", nil).should == response2
 
-      route.find_matching_reply(Oga.parse_xml("<root><abc>123</abc><xyz>444</xyz></root>"), "text/xml").should_not == response4
+      route.find_matching_reply(Oga.parse_xml("<root><abc>123</abc><xyz>444</xyz></root>"), "text/xml", nil).should_not == response4
+    end
+    
+    it "should return first response if no matcher matches when accept header is nil" do
+      route = Factory(:route, :uri => "abc", :http_method => "POST", :kind => "SOAP")
+      matcher1 = Factory(:matcher, :route_id => route.id)
+      matcher2 = Factory(:matcher, :route_id => route.id)
+      match1 = Factory(:match, :expression => "//abc", :eval_criteria => "exists", :matcher_id => matcher1.id)
+      match2 = Factory(:match, :expression => "//xyz", :eval_criteria => "exists", :matcher_id => matcher1.id)
+      response1 = Factory(:response, :content_type => "text/json", :matcher_id => matcher1.id) 
+      response2 = Factory(:response, :content_type => "text/xml", :matcher_id => matcher1.id)
+
+      match3 = Factory(:match, :expression => "//abc", :eval_criteria => "exists", :matcher_id => matcher2.id)
+      match4 = Factory(:match, :expression => "//xyz", :eval_criteria => "exists", :matcher_id => matcher2.id)
+      response3 = Factory(:response, :content_type => "text/json", :matcher_id => matcher2.id) 
+      response4 = Factory(:response, :content_type => "text/xml", :matcher_id => matcher2.id)
+
+      route.find_matching_reply(Oga.parse_xml("<root><www>123</www><xyz>444</xyz></root>"), "text/xml", nil).should == response2
+
+      route.find_matching_reply(Oga.parse_xml("<root><www>123</www><xyz>444</xyz></root>"), "text/xml", nil).should_not == response4
+      route.find_matching_reply(Oga.parse_xml("<root><www>123</www><xyz>444</xyz></root>"), "text/xml", nil).should_not == response3
+      route.find_matching_reply(Oga.parse_xml("<root><www>123</www><xyz>444</xyz></root>"), "text/xml", nil).should_not == response1
+    end
+    
+    it "should return first response if no matcher matches when accept header is present" do
+      route = Factory(:route, :uri => "abc", :http_method => "POST", :kind => "SOAP")
+      matcher1 = Factory(:matcher, :route_id => route.id)
+      matcher2 = Factory(:matcher, :route_id => route.id)
+      match1 = Factory(:match, :expression => "//abc", :eval_criteria => "exists", :matcher_id => matcher1.id)
+      match2 = Factory(:match, :expression => "//xyz", :eval_criteria => "exists", :matcher_id => matcher1.id)
+      response1 = Factory(:response, :content_type => "text/json", :matcher_id => matcher1.id) 
+      response2 = Factory(:response, :content_type => "text/xml", :matcher_id => matcher1.id)
+
+      match3 = Factory(:match, :expression => "//abc", :eval_criteria => "exists", :matcher_id => matcher2.id)
+      match4 = Factory(:match, :expression => "//xyz", :eval_criteria => "exists", :matcher_id => matcher2.id)
+      response3 = Factory(:response, :content_type => "text/json", :matcher_id => matcher2.id) 
+      response4 = Factory(:response, :content_type => "text/xml", :matcher_id => matcher2.id)
+
+      route.find_matching_reply(Oga.parse_xml("<root><www>123</www><xyz>444</xyz></root>"), "text/xml", "text/xml").should == response2
+
+      route.find_matching_reply(Oga.parse_xml("<root><www>123</www><xyz>444</xyz></root>"), "text/xml", "text/xml").should_not == response4
+      route.find_matching_reply(Oga.parse_xml("<root><www>123</www><xyz>444</xyz></root>"), "text/xml", "text/xml").should_not == response3
+      route.find_matching_reply(Oga.parse_xml("<root><www>123</www><xyz>444</xyz></root>"), "text/xml", "text/xml").should_not == response1
     end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151222053935) do
+ActiveRecord::Schema.define(version: 20151224115217) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -107,6 +107,8 @@ ActiveRecord::Schema.define(version: 20151222053935) do
     t.string   "content_type"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.integer  "matcher_id"
+    t.integer  "match_id"
   end
 
   create_table "roles", force: :cascade do |t|
