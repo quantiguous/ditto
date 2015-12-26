@@ -25,10 +25,10 @@ class Route < ActiveRecord::Base
   def find_matching_reply(req_doc, content_type, accept)
     unless self.matchers.empty?
       matched = false
-      self.matchers.each do |matcher|
+      self.matchers.each_with_index do |matcher, index|
         if matcher.evaluate(req_doc) 
           matched = true
-          response = matcher.find_response(content_type)
+          response = matcher.find_response(content_type, accept)
           return response
         end
       end
@@ -40,13 +40,14 @@ class Route < ActiveRecord::Base
           accept.each do |acc|
             res = self.matchers.first.responses.find_by(:content_type => acc)
           end          
-          res.nil? ? self.matchers.first.responses.first : res
+          res = self.matchers.first.responses.first if res.nil?
         elsif (accept.nil?) and (content_type.present?) 
           res = self.matchers.first.responses.find_by(:content_type => content_type)
-          res.nil? ? self.matchers.first.responses.first : res
+          res = self.matchers.first.responses.first if res.nil?
         else
-          self.matchers.first.responses.first
+          res = self.matchers.first.responses.first
         end
+        return res
       end
     end
   end

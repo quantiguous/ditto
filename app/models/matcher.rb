@@ -16,7 +16,7 @@ class Matcher < ActiveRecord::Base
 
   def evaluate(req)
     matched = nil
-    self.matches.each do |match| 
+    self.matches.each_with_index do |match, index| 
       case match.eval_criteria
       when "exists"
         if req.xpath(match.expression).present?
@@ -35,11 +35,19 @@ class Matcher < ActiveRecord::Base
     matched.nil? ? false : true
   end
 
-  def find_response(content_type)
-    if content_type.nil? 
-      res = self.responses.first
-    else 
+  def find_response(content_type, accept)
+    if !accept.nil?
+      accept = accept.split(",")
+      res = nil
+      accept.each do |acc|
+        res = self.responses.find_by(:content_type => acc)
+      end
+      res = self.responses.first if res.nil?
+    elsif (accept.nil?) and (content_type.present?) 
       res = self.responses.find_by(:content_type => content_type)
+      res = self.responses.first if res.nil?
+    else
+      res = self.responses.first
     end
     return res
   end

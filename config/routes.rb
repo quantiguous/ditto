@@ -1,6 +1,5 @@
 Ditto::Application.routes.draw do
-  resources :expected_responses
-  resources :input_requests
+  
   devise_for :users
   devise_for :admin_users, ActiveAdmin::Devise.config
 
@@ -9,7 +8,7 @@ Ditto::Application.routes.draw do
   resources :routes
   resources :matchers
 
-  get 'route/execute_route' => 'routes#execute_route'
+  match '/route/execute_route/:uri', to: 'routes#execute_route', via: :all
 
   ActiveAdmin.routes(self)
 end
