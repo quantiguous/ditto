@@ -1,5 +1,7 @@
 class Route < ActiveRecord::Base
   has_many :matchers
+  
+  validates_presence_of :uri, :kind, :http_method
 
   def parse_request(req)
     if self.kind == "SOAP"

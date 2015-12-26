@@ -1,0 +1,53 @@
+= form_for(@route) do |f|
+  - if @route.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@route.errors.count, "error")
+        prohibited this route from being saved:
+      %ul
+        - @route.errors.full_messages.each do |message|
+          %li= message
+  .field
+    = f.label :kind
+    %br
+    = f.text_field :kind
+  .field
+    = f.label :http_method
+    %br
+    = f.text_field :http_method
+  .field
+    = f.label :uri
+    %br
+    = f.text_field :uri
+  %br
+  %table.table.table-bordered.table-striped.table-hover
+    %thead
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        = check_box_tag(:select_all, value = "1", checked = false, options = {})
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Matcher name
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+    %tbody
+      - @matchers.each do |matcher|
+        %tr
+          %td{:style=>'text-align:left;'}
+            - if @route.matchers.include?(matcher)
+              = check_box_tag "matcher_ids[]", matcher.id, true, class: 'saved_request_select'
+            - else
+              = check_box_tag "matcher_ids[]", matcher.id, false, class: 'saved_request_select'
+          %td{:style=>'text-align:left;'}
+            = matcher.name
+          %td{:style=>'text-align:left;'}
+            = link_to 'Show', matcher
+  .form-actions
+    - (f.object.new_record?) ? label_name = "Create" : label_name = "Update"
+    = f.button :submit ,:class=>"btn btn-primary", :id => 'submit_bm_app', :value => label_name + ' Route'
+    / = f.button :submit, "Create Test Suite", :class=>"btn btn-primary", :id => 'create_test_suite_btn'
+    / = link_to :Cancel, :root, :name => 'cancel', :class=>"cancel btn"
+		
+:javascript
+  $("input#select_all").on("change",function(){
+    console.log("change");
+  $('.saved_request_select').prop("checked", $(this).prop("checked"));
+  });
+  $('.saved_request_select').prop("checked", $(this).prop("checked"));

@@ -1,0 +1,48 @@
+= nested_form_for @matcher, :html => {:class=>'form-horizontal', :multipart => true, :autocomplete=>"off", :id => "matcher_form", :style=> 'overflow: auto;'} do |f|
+  - if @matcher.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@matcher.errors.count, "error")
+        prohibited this matcher from being saved:
+      %ul
+        - @matcher.errors.full_messages.each do |message|
+          %li= message
+  .field
+    = f.label :name
+    %br/
+    = f.text_field :name
+		
+  %br
+    .control-group{:style=>"clear: both;"}
+      %table#rules
+        = f.fields_for :matches, :wrapper => false do |rule_form|
+          %tr.fields
+            %td= rule_form.label :expression, 'Xpath', :class => 'control-label'
+            %td= rule_form.text_field :expression
+
+            %td= rule_form.label :eval_criteria, 'Evaluation Criteria', :class => 'control-label'
+            %td= rule_form.select :eval_criteria, options_for_select(Match.options_for_eval_criteria, rule_form.object.eval_criteria)
+
+            %td= rule_form.label :value, 'Exp Value', :class => 'control-label'
+            %td= rule_form.text_field :value
+
+            %td= rule_form.link_to_remove "Remove this rule", :class => 'control-label'
+
+        = f.link_to_add "Add a rule", :matches, :data => { :target => "#rules" }
+
+    .control-group{:style=>"clear: both;"}
+      %table#responses
+        = f.fields_for :responses, :wrapper => false do |response_form|
+          %tr.fields
+            %td= response_form.label :content_type, 'Content Type', :class => 'control-label'
+            %td= response_form.text_field :content_type
+
+            %td= response_form.label :response, 'Response', :class => 'control-label'
+            %td= response_form.text_area :response
+
+            %td= response_form.link_to_remove "Remove this response", :class => 'control-label'
+
+        = f.link_to_add "Add a response", :responses, :data => { :target => "#responses" }
+  %br
+  .actions
+    = f.submit

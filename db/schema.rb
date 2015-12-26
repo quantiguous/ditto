@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151224115217) do
+ActiveRecord::Schema.define(version: 20151226074853) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(version: 20151224115217) do
     t.integer  "route_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "name"
   end
 
   create_table "matches", force: :cascade do |t|

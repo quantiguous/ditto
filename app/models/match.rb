@@ -1,4 +1,7 @@
 class Match < ActiveRecord::Base
   belongs_to :matcher
-  has_one :response
+  
+  def self.options_for_eval_criteria
+    [['Exists','exists'], ['Equal To','equal_to']]
+  end
 end

@@ -5,6 +5,9 @@ Ditto::Application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
 
   root :to => 'dashboard#overview'
+  
+  resources :routes
+  resources :matchers
 
   get 'route/execute_route' => 'routes#execute_route'
 
