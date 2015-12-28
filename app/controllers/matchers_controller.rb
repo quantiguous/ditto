@@ -1,11 +1,20 @@
 class MatchersController < ApplicationController
   
   def index
-    @matchers = Matcher.all
+    matchers = Matcher.order("id desc")
+    
+    if params[:route_id].present?
+      matchers = Matcher.where(:route_id => params[:route_id])
+    end
+    
+    @matchers_count = matchers.count
+    @matchers = matchers.paginate(:per_page => 10, :page => params[:page]) rescue []
   end
 
   def show
     @matcher = Matcher.find(params[:id])
+    @matches = @matcher.matches
+    @responses = @matcher.responses
   end
   
   def new

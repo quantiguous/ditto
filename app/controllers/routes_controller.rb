@@ -2,7 +2,9 @@ class RoutesController < ApplicationController
   # before_filter :restrict_access
 
   def index
-    @routes = Route.all
+    routes = Route.order("id desc")
+    @routes_count = routes.count
+    @routes = routes.paginate(:per_page => 10, :page => params[:page]) rescue []
   end
 
   def show
@@ -28,7 +30,6 @@ class RoutesController < ApplicationController
       redirect_to new_route_path
     else
       if !@route.valid?
-        p @route.errors
         redirect_to new_route_path
       else
         @route.save!
@@ -37,7 +38,7 @@ class RoutesController < ApplicationController
           matcher.update_attributes(:route_id => @route.id)
         end
         flash[:alert] = 'Route successfully created'
-        redirect_to @route
+        redirect_to routes_path
       end
     end
   end
@@ -52,7 +53,6 @@ class RoutesController < ApplicationController
       redirect_to new_route_path
     else
       if !@route.valid?
-        p @route.errors
         redirect_to new_route_path
       else
         @route.save!
@@ -61,7 +61,7 @@ class RoutesController < ApplicationController
           matcher.update_attributes(:route_id => @route.id)
         end
         flash[:alert] = 'Route successfully updated'
-        redirect_to @route
+        redirect_to routes_path
       end
     end
     rescue ActiveRecord::StaleObjectError
