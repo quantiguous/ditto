@@ -1,6 +1,6 @@
 class RoutesController < ApplicationController
   # before_filter :restrict_access
-  
+
   def index
     @routes = Route.all
   end
@@ -82,16 +82,16 @@ class RoutesController < ApplicationController
     request_method = request.env['REQUEST_METHOD']
 
     if request_method == "GET"
-      input_data = params
+      input_data = params #request.query_parameters
     elsif request_method == "POST"
       input_data = request.body.read
     end
+
     route = Route.find_by(:uri => params[:uri])
     
     req_log = RequestLog.create(:request => input_data, :accept => request.env['HTTP_ACCEPT'], 
                                 :http_method => request_method, :content_type => request.content_type)
     
-    route = Route.find_by(:uri => params[:uri])
     if route.nil?
       log = {:route_id => nil, :status_code => '404', :response => nil}
       render status: 404, text: "#{params[:uri]} not found."

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151226074853) do
+ActiveRecord::Schema.define(version: 20151228104112) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -101,6 +101,19 @@ ActiveRecord::Schema.define(version: 20151226074853) do
     t.integer  "response_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+  end
+
+  create_table "request_logs", force: :cascade do |t|
+    t.string   "route_id"
+    t.text     "request"
+    t.string   "status_code"
+    t.string   "accept"
+    t.string   "http_method"
+    t.string   "content_type"
+    t.string   "kind"
+    t.text     "response"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "responses", force: :cascade do |t|

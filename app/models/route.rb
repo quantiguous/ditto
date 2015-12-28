@@ -1,6 +1,7 @@
 class Route < ActiveRecord::Base
   has_many :matchers
-  
+  has_many :request_logs
+
   validates_presence_of :uri, :kind, :http_method
   
   def self.options_for_kind

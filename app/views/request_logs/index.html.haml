@@ -1,0 +1,40 @@
+%br
+
+%h3
+  Requests Log :
+
+%br
+
+%table.table
+  %thead
+    %tr
+      %th Time
+      %th Route
+      %th HTTP Method
+      -# %th Accept
+      -# %th Content Type
+      %th Status
+      -# %th Request
+      -# %th Response
+      %th
+  %tbody
+    - @request_logs.each do |request_log|
+      %tr
+        %td
+          = formatted_time(request_log.created_at)
+        %td
+          = request_log.route.uri
+        %td
+          = request_log.http_method
+        -# %td
+          -# = request_log.accept
+        -# %td
+          -# = request_log.content_type
+        %td
+          = request_log.status_code
+        -# %td
+          -# = request_log.request
+        -# %td
+          -# = request_log.response
+        %td
+          = link_to "View", request_log_path(request_log)

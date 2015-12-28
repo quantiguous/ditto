@@ -7,6 +7,7 @@ Ditto::Application.routes.draw do
   
   resources :routes
   resources :matchers
+  resources :request_logs
 
   match '/route/execute_route/:uri', to: 'routes#execute_route', via: :all
 

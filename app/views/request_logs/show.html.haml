@@ -1,0 +1,55 @@
+%br
+
+%h3
+  Log :
+
+%br
+
+%table.table
+  %tbody
+    %tr
+      %th{:style=>"width: 10%;"}
+        Route
+      %td 
+        = @request_log.route.uri
+    %tr
+      %th{:style=>"width: 10%;"}
+        Time
+      %td 
+        = formatted_time(@request_log.created_at)
+    %tr
+      %th{:style=>"width: 10%;"}
+        Http Method
+      %td 
+        = @request_log.http_method
+    %tr
+      %th{:style=>"width: 10%;"}
+        Accept
+      %td 
+        = @request_log.accept
+    %tr
+      %th{:style=>"width: 10%;"}
+        Content Type
+      %td 
+        = @request_log.content_type
+    %tr
+      %th{:style=>"width: 10%;"}
+        Status
+      %td 
+        = @request_log.status_code
+    %tr
+      %th{:style=>"width: 10%;"}
+        Request
+      %td
+        - if !@request_log.request.nil?
+          = text_area_tag 'request', @request_log.request, disabled: true, size: "25x1", id: 'request', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid black;"
+        - else
+          = "-"
+    %tr
+      %th{:style=>"width: 10%;"}
+        Response
+      %td
+        - if !@request_log.response.nil?
+          = text_area_tag 'response', @request_log.response, disabled: true, size: "25x1", id: 'response', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: auto; max-height: 198px; resize: none; background-color: white; border: 1px solid black;"
+        - else
+          = "-"
