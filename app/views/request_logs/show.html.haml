@@ -42,7 +42,7 @@
         Request
       %td
         - if !@request_log.request.nil?
-          = text_area_tag 'request', @request_log.request, disabled: true, size: "25x1", id: 'request', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid black;"
+          = text_area_tag 'request', @request_log.request, disabled: true, size: "25x1", id: 'request', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"
         - else
           = "-"
     %tr
@@ -50,6 +50,6 @@
         Response
       %td
         - if !@request_log.response.nil?
-          = text_area_tag 'response', @request_log.response, disabled: true, size: "25x1", id: 'response', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: auto; max-height: 198px; resize: none; background-color: white; border: 1px solid black;"
+          = text_area_tag 'response', @request_log.response, disabled: true, size: "25x1", id: 'response', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"
         - else
           = "-"
