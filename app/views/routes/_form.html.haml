@@ -7,18 +7,30 @@
       %ul
         - @route.errors.full_messages.each do |message|
           %li= message
-  .field
-    = f.label :kind
-    %br
-    = f.text_field :kind
-  .field
-    = f.label :http_method
-    %br
-    = f.text_field :http_method
-  .field
-    = f.label :uri
-    %br
-    = f.text_field :uri
+  .control-group
+    = f.label ' '
+  .form-main{:style => 'width:100%'}
+    .control-group
+      = f.label :kind, "Kind", :class => 'control-label'
+      = f.select :kind, options_for_select(Route.options_for_kind)
+    .control-group
+      = f.label :http_method, "Http Method", :class => 'control-label'
+      = f.select :http_method, options_for_select(Route.options_for_http_method)
+    .control-group
+      = f.label :uri, "Uri", :class => 'control-label'
+      = f.text_field :uri
+  / .field
+  /   = f.label :kind
+  /   %br
+  /   = f.text_field :kind
+  / .field
+  /   = f.label :http_method
+  /   %br
+  /   = f.text_field :http_method
+  / .field
+  /   = f.label :uri
+  /   %br
+  /   = f.text_field :uri
   %br
   %table.table.table-bordered.table-striped.table-hover
     %thead

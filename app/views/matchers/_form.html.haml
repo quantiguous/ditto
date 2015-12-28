@@ -35,7 +35,7 @@
         = f.fields_for :responses, :wrapper => false do |response_form|
           %tr.fields
             %td= response_form.label :content_type, 'Content Type', :class => 'control-label'
-            %td= response_form.text_field :content_type
+            %td= response_form.select :content_type, options_for_select(Response.options_for_content_type)
 
             %td= response_form.label :response, 'Response', :class => 'control-label'
             %td= response_form.text_area :response
