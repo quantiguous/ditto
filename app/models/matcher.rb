@@ -6,7 +6,7 @@ class Matcher < ActiveRecord::Base
   has_many :responses, dependent: :destroy
   accepts_nested_attributes_for :responses, :reject_if => lambda { |a| a[:response].blank?}, :allow_destroy => true
   
-  # validate :presence_of_rules_and_responses
+  validate :presence_of_rules_and_responses
   
   def presence_of_rules_and_responses
     if self.matches.empty? or self.responses.empty?
