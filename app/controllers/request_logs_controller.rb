@@ -15,6 +15,7 @@ class RequestLogsController < ApplicationController
   end
 
   def show
+    require 'yaml'
     @request_log = RequestLog.find(params[:id])
   end
 

@@ -25,13 +25,13 @@
         %td
           = request_log.route.uri
         %td
-          = request_log.http_method
+          = request_log.headers.first.http_method
         -# %td
           -# = request_log.accept
         -# %td
           -# = request_log.content_type
         %td
-          = request_log.status_code
+          = request_log.headers.last.status_code
         -# %td
           -# = request_log.request
         -# %td

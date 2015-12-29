@@ -17,39 +17,62 @@
         Time
       %td 
         = formatted_time(@request_log.created_at)
+				
+%h3
+  Request Headers :	
+%table.table
+  %tbody			
     %tr
       %th{:style=>"width: 10%;"}
         Http Method
       %td 
-        = @request_log.http_method
+        = @request_log.headers.first.http_method
     %tr
       %th{:style=>"width: 10%;"}
         Accept
       %td 
-        = @request_log.accept
+        = @request_log.headers.first.accept
     %tr
       %th{:style=>"width: 10%;"}
         Content Type
       %td 
-        = @request_log.content_type
+        = @request_log.headers.first.content_type
+				
+%h3
+  Request:
+%table.table
+  %tbody
     %tr
       %th{:style=>"width: 10%;"}
-        Status
-      %td 
-        = @request_log.status_code
-    %tr
-      %th{:style=>"width: 10%;"}
-        Request
       %td
-        - if !@request_log.request.nil?
-          = text_area_tag 'request', request_log.request, disabled: true, size: "25x1", id: 'request', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"
+        - if !@request_log.headers.first.request.nil?
+          = text_area_tag 'request', @request_log.headers.first.request, disabled: true, size: "25x1", id: 'request', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"
         - else
           = "-"
+
+%h3
+  Response Headers :	
+%table.table
+  %tbody	
     %tr
       %th{:style=>"width: 10%;"}
-        Response
+        Status Code
+      %td 
+        = @request_log.headers.last.status_code
+    %tr
+      %th{:style=>"width: 10%;"}
+        Content Type
+      %td 
+        = @request_log.headers.last.content_type
+				
+%h3
+  Response:
+%table.table
+  %tbody
+    %tr
+      %th{:style=>"width: 10%;"}
       %td
-        - if !@request_log.response.nil?
-          = text_area_tag 'response', @request_log.response, disabled: true, size: "25x1", id: 'response', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"
+        - if !@request_log.headers.last.response.nil?
+          = text_area_tag 'response', @request_log.headers.last.response, disabled: true, size: "25x1", id: 'response', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"
         - else
           = "-"

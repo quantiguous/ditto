@@ -83,25 +83,24 @@ class RoutesController < ApplicationController
 
     if request_method == "GET"
       input_data = request.query_parameters #request.query_parameters
-      puts "\ninput_data :- "
-      puts input_data
-      puts "\ninput_data.is_a?(Hash) :- #{input_data.is_a?(Hash)}"
-      puts "\ninput_data.is_a?(String) :- #{input_data.is_a?(String)}"
-      converted_to_str = input_data.to_s
-      puts "\nconverted_to_str :- "
-      puts converted_to_str
-      puts "\n"
-      puts "\nconverted_to_str.is_a?(Hash) :- #{converted_to_str.is_a?(Hash)}"
-      puts "\nconverted_to_str.is_a?(String) :- #{converted_to_str.is_a?(String)}"
-      puts "\n"
+      # puts "\ninput_data :- "
+      # puts input_data
+      # puts "\ninput_data.is_a?(Hash) :- #{input_data.is_a?(Hash)}"
+      # puts "\ninput_data.is_a?(String) :- #{input_data.is_a?(String)}"
+      # converted_to_str = input_data.to_s
+      # puts "\nconverted_to_str :- "
+      # puts converted_to_str
+      # puts "\n"
+      # puts "\nconverted_to_str.is_a?(Hash) :- #{converted_to_str.is_a?(Hash)}"
+      # puts "\nconverted_to_str.is_a?(String) :- #{converted_to_str.is_a?(String)}"
+      # puts "\n"
     elsif request_method == "POST"
       input_data = request.body.read
     end
 
     route = Route.find_by(:uri => params[:uri])
     
-    req_log = RequestLog.create(:request => converted_to_str, :accept => request.env['HTTP_ACCEPT'], 
-                                :http_method => request_method, :content_type => request.content_type)
+    req_log = RequestLog.new
     
     if route.nil?
       log = {:route_id => nil, :status_code => '404', :response => nil}
@@ -121,13 +120,18 @@ class RoutesController < ApplicationController
             log = {:route_id => route.id, :status_code => '409', :response => nil}
             render status: 409, text: "No Response found." 
           else
-            log = {:route_id => route.id, :status_code => '200', :response => response.response}
+            log = {:route_id => route.id, :status_code => '200', :response => response}
             render status: 200, text: response.response 
           end
         end
       end
     end
-    req_log.update_attributes(log)
+    req_log.route_id = log[:route_id]
+    req_header = RequestHeader.new(input_data, request.content_type, request_method, request.env['HTTP_ACCEPT'], request.content_length)
+    res_header = ResponseHeader.new(log[:response].present? ? log[:response].content_type : nil, log[:status_code], log[:response].present? ? log[:response].response : nil)
+    req_log.headers << req_header
+    req_log.headers << res_header
+    req_log.save
   end
 
   private
