@@ -82,14 +82,25 @@ class RoutesController < ApplicationController
     request_method = request.env['REQUEST_METHOD']
 
     if request_method == "GET"
-      input_data = params #request.query_parameters
+      input_data = request.query_parameters #request.query_parameters
+      puts "\ninput_data :- "
+      puts input_data
+      puts "\ninput_data.is_a?(Hash) :- #{input_data.is_a?(Hash)}"
+      puts "\ninput_data.is_a?(String) :- #{input_data.is_a?(String)}"
+      converted_to_str = input_data.to_s
+      puts "\nconverted_to_str :- "
+      puts converted_to_str
+      puts "\n"
+      puts "\nconverted_to_str.is_a?(Hash) :- #{converted_to_str.is_a?(Hash)}"
+      puts "\nconverted_to_str.is_a?(String) :- #{converted_to_str.is_a?(String)}"
+      puts "\n"
     elsif request_method == "POST"
       input_data = request.body.read
     end
 
     route = Route.find_by(:uri => params[:uri])
     
-    req_log = RequestLog.create(:request => input_data, :accept => request.env['HTTP_ACCEPT'], 
+    req_log = RequestLog.create(:request => converted_to_str, :accept => request.env['HTTP_ACCEPT'], 
                                 :http_method => request_method, :content_type => request.content_type)
     
     if route.nil?

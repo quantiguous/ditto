@@ -34,6 +34,7 @@ gem 'activeadmin-sortable'
 gem 'therubyracer'
 gem "daemons"
 gem "sqlite3"
+gem "json"
 gem 'oga'
 gem 'gyoku', '~> 1.0'
 

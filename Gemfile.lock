@@ -510,6 +510,7 @@ DEPENDENCIES
   gyoku (~> 1.0)
   haml-rails
   jquery-rails (= 2.0.2)
+  json
   mime-types
   nested_form
   oga
