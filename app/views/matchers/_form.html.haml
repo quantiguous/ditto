@@ -7,10 +7,15 @@
       %ul
         - @matcher.errors.full_messages.each do |message|
           %li= message
-  .field
-    = f.label :name
-    %br/
-    = f.text_field :name
+  .control-group
+    .fields
+      = f.label :name, :class => 'control-label'
+      = f.text_field :name, :style=>"width: 30%;"
+  .control-group
+    .fields
+      = f.label :scenario, :class => 'control-label'
+      = f.text_area :scenario, size: "30x4", :style=>"width: 30%; resize: vertical; max-height: 180px;"
+
 		
   %br
     .control-group{:style=>"clear: both;"}
@@ -38,11 +43,10 @@
             %td= response_form.select :content_type, options_for_select(Response.options_for_content_type)
 
             %td= response_form.label :response, 'Response', :class => 'control-label'
-            %td= response_form.text_area :response
+            %td= response_form.text_area :response, size: "30x10", :style=>"width: 500px; max-width: 500px; resize: both; height: 100px; max-height: 180px;"
 
             %td= response_form.link_to_remove "Remove this response", :class => 'control-label'
 
         = f.link_to_add "Add a response", :responses, :data => { :target => "#responses" }
-  %br
   .actions
-    = f.submit
+    = f.submit "Create Matcher", :class => "btn"

@@ -1,6 +1,22 @@
 .show_ticket
   .header-form-main{:style=>'background-color: #F1F2F8; width: 100%; height: 630px; display: inline-block;'}
     #ticket-details
+      %br
+      %h3
+        Matcher Details:
+      %table.table.table-bordered.table-striped.table-hover
+        .tbody
+          %tr
+            %th{:style=>'text-align:left;'}
+              Name
+            %td{:style=>'text-align:left;'}
+              = @matcher.name
+          %tr
+            %th{:style=>'text-align:left;'}
+              Scenario
+            %td{:style=>'text-align:left;'}
+              = @matcher.scenario
+      %br
       %h3
         Matches:
       %table.table.table-bordered.table-striped.table-hover
@@ -21,7 +37,6 @@
               %td{:style=>'text-align:left;'}
                 = match.value
       
-      %br
       %br
       %h3
         Responses:

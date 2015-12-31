@@ -82,18 +82,7 @@ class RoutesController < ApplicationController
     request_method = request.env['REQUEST_METHOD']
 
     if request_method == "GET"
-      input_data = request.query_parameters #request.query_parameters
-      # puts "\ninput_data :- "
-      # puts input_data
-      # puts "\ninput_data.is_a?(Hash) :- #{input_data.is_a?(Hash)}"
-      # puts "\ninput_data.is_a?(String) :- #{input_data.is_a?(String)}"
-      # converted_to_str = input_data.to_s
-      # puts "\nconverted_to_str :- "
-      # puts converted_to_str
-      # puts "\n"
-      # puts "\nconverted_to_str.is_a?(Hash) :- #{converted_to_str.is_a?(Hash)}"
-      # puts "\nconverted_to_str.is_a?(String) :- #{converted_to_str.is_a?(String)}"
-      # puts "\n"
+      input_data = request.query_parameters
     elsif request_method == "POST"
       input_data = request.body.read
     end

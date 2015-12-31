@@ -1,7 +1,6 @@
 %br
-%br
 %h3 Matchers
-%br 
+%br
 = link_to 'New Matcher', new_matcher_path
 %br
 %br
@@ -9,10 +8,12 @@
 %br
 = will_paginate @matchers
 %br
-%table.table.table-bordered.table-striped.table-hover{:style => 'width: 50%;'}
+%table.table.table-bordered.table-striped.table-hover
   .thead
     %th{:style=>'text-align:left; background-color: lightblue;'}
       Matcher Name
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Scenario
     %th{:style=>'text-align:left; background-color: lightblue;'}
       	   
 			
@@ -21,5 +22,7 @@
       %tr
         %td{:style=>'text-align:left;'}
           = matcher.name
+        %td{:style=>'text-align:left;'}
+          = matcher.scenario
         %td{:style=>'text-align:left;'}
           = link_to 'View' , matcher

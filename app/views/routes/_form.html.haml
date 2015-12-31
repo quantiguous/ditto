@@ -1,4 +1,4 @@
-= form_for(@route) do |f|
+= form_for @route, :html => {:class => "form-horizontal"} do |f|
   - if @route.errors.any?
     #error_explanation
       %h2
@@ -11,33 +11,25 @@
     = f.label ' '
   .form-main{:style => 'width:100%'}
     .control-group
-      = f.label :kind, "Kind", :class => 'control-label'
-      = f.select :kind, options_for_select(Route.options_for_kind)
+      .fields
+        = f.label :kind, "Kind", :class => 'control-label'
+        = f.select :kind, options_for_select(Route.options_for_kind)
     .control-group
-      = f.label :http_method, "Http Method", :class => 'control-label'
+      = f.label :http_method, "HTTP Method", :class => 'control-label'
       = f.select :http_method, options_for_select(Route.options_for_http_method)
     .control-group
-      = f.label :uri, "Uri", :class => 'control-label'
+      = f.label :uri, "URI", :class => 'control-label'
       = f.text_field :uri
-  / .field
-  /   = f.label :kind
-  /   %br
-  /   = f.text_field :kind
-  / .field
-  /   = f.label :http_method
-  /   %br
-  /   = f.text_field :http_method
-  / .field
-  /   = f.label :uri
-  /   %br
-  /   = f.text_field :uri
   %br
+  %h3 Select Macther(s) :
   %table.table.table-bordered.table-striped.table-hover
     %thead
-      %th{:style=>'text-align:left; background-color: lightblue;'}
+      %th{:style=>'text-align:left; background-color: lightblue; width: 2%'}
         = check_box_tag(:select_all, value = "1", checked = false, options = {})
       %th{:style=>'text-align:left; background-color: lightblue;'}
-        Matcher name
+        Matcher Name
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Scenario
       %th{:style=>'text-align:left; background-color: lightblue;'}
     %tbody
       - @matchers.each do |matcher|
@@ -50,16 +42,16 @@
           %td{:style=>'text-align:left;'}
             = matcher.name
           %td{:style=>'text-align:left;'}
+            = matcher.scenario
+          %td{:style=>'text-align:left;'}
             = link_to 'Show', matcher
-  .form-actions
+  .actions
     - (f.object.new_record?) ? label_name = "Create" : label_name = "Update"
-    = f.button :submit ,:class=>"btn btn-primary", :id => 'submit_bm_app', :value => label_name + ' Route'
-    / = f.button :submit, "Create Test Suite", :class=>"btn btn-primary", :id => 'create_test_suite_btn'
-    / = link_to :Cancel, :root, :name => 'cancel', :class=>"cancel btn"
+    = f.button :submit, :class=>"btn btn-primary", :id => 'submit_bm_app', :value => label_name + ' Route'
 		
 :javascript
   $("input#select_all").on("change",function(){
-    console.log("change");
-  $('.saved_request_select').prop("checked", $(this).prop("checked"));
+    $('.saved_request_select').prop("checked", $(this).prop("checked"));
   });
+
   $('.saved_request_select').prop("checked", $(this).prop("checked"));
