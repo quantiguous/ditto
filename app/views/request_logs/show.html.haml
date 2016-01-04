@@ -11,7 +11,7 @@
       %th{:style=>"width: 10%;"}
         Route
       %td 
-        = @request_log.route.uri
+        = @request_log.route.uri rescue nil
     %tr
       %th{:style=>"width: 10%;"}
         Time
@@ -26,18 +26,17 @@
       %th{:style=>"width: 10%;"}
         Http Method
       %td 
-        = @request_log.headers.first.http_method
+        = @req_resp_details[:request_details].http_method rescue nil
     %tr
       %th{:style=>"width: 10%;"}
         Accept
       %td 
-        = @request_log.headers.first.accept
+        = @req_resp_details[:request_details].accept rescue nil
     %tr
       %th{:style=>"width: 10%;"}
         Content Type
-      %td 
-        = @request_log.headers.first.content_type
-				
+      %td
+        = @req_resp_details[:request_details].content_type rescue nil
 %h3
   Request:
 %table.table
@@ -45,10 +44,7 @@
     %tr
       %th{:style=>"width: 10%;"}
       %td
-        - if !@request_log.headers.first.request.nil?
-          = text_area_tag 'request', @request_log.headers.first.request, disabled: true, size: "25x1", id: 'request', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"
-        - else
-          = "-"
+        = text_area_tag 'request', @req_resp_details[:request_details].request, disabled: true, size: "25x1", id: 'request', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"
 
 %h3
   Response Headers :	
@@ -58,13 +54,12 @@
       %th{:style=>"width: 10%;"}
         Status Code
       %td 
-        = @request_log.headers.last.status_code
+        = @req_resp_details[:response_details].status_code
     %tr
       %th{:style=>"width: 10%;"}
         Content Type
       %td 
-        = @request_log.headers.last.content_type
-				
+        = @req_resp_details[:response_details].content_type
 %h3
   Response:
 %table.table
@@ -72,7 +67,4 @@
     %tr
       %th{:style=>"width: 10%;"}
       %td
-        - if !@request_log.headers.last.response.nil?
-          = text_area_tag 'response', @request_log.headers.last.response, disabled: true, size: "25x1", id: 'response', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"
-        - else
-          = "-"
+        = text_area_tag 'response', @req_resp_details[:response_details].response, disabled: true, size: "25x1", id: 'response', :readonly => true ,:style=>"font-size: 1em; padding: 1%; width: 98%; height: 198px; max-height: 198px; resize: none; background-color: white; border: 1px solid silver;"

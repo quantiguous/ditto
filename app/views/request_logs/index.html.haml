@@ -1,40 +1,35 @@
 %br
 
 %h3
-  Requests Log :
+  Requests Logs :
 
 %br
-
-%table.table
+= "Total Count: #{@request_logs_count}"
+%br
+= will_paginate @request_logs
+%br
+%table.table.table-bordered.table-striped.table-hover
   %thead
     %tr
-      %th Time
-      %th Route
-      %th HTTP Method
-      -# %th Accept
-      -# %th Content Type
-      %th Status
-      -# %th Request
-      -# %th Response
-      %th
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Time
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Route
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        HTTP Method
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Status
+      %th{:style=>'text-align:left; background-color: lightblue;'}
   %tbody
     - @request_logs.each do |request_log|
       %tr
         %td
-          = formatted_time(request_log.created_at)
+          = formatted_time(request_log.created_at) rescue nil
         %td
-          = request_log.route.uri
+          = request_log.route.uri rescue nil
         %td
-          = request_log.headers.first.http_method
-        -# %td
-          -# = request_log.accept
-        -# %td
-          -# = request_log.content_type
+          = request_log.headers.first.nil? ? "-" : request_log.headers.first.http_method
         %td
-          = request_log.headers.last.status_code
-        -# %td
-          -# = request_log.request
-        -# %td
-          -# = request_log.response
+          = request_log.headers.last.nil? ? "-" : request_log.headers.last.status_code
         %td
           = link_to "View", request_log_path(request_log)
