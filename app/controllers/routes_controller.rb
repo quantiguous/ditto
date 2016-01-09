@@ -89,25 +89,24 @@ class RoutesController < ApplicationController
   end
   
   def execute_route
-    request_method = request.env['REQUEST_METHOD']
-
-    if request_method == "GET"
+    
+    if request.method == "GET"
       input_data = request.query_parameters
-    elsif request_method == "POST"
+    elsif request.method == "POST"
       input_data = request.body.read
     end
 
-    route = Route.find_by(:uri => params[:uri])
+    route = Route.find_by(:uri => request.path)
     
     req_log = RequestLog.new(:request => input_data)
     
     if route.nil?
       log = {:route_id => nil, :status_code => '404', :response => nil}
-      render status: 404, text: "#{params[:uri]} not found."
+      render status: 404, text: "#{request.path} not found."
     else
-      if request_method != route.http_method
+      if request.method != route.http_method
         log = {:route_id => route.id, :status_code => '405', :response => nil}
-        render status: 405, text: "#{request_method} not allowed for #{params[:uri]} route."
+        render status: 405, text: "#{request.method} not allowed for #{params[:uri]} route."
       else
         req_obj = route.parse_request(input_data)
         if req_obj.is_a?(Hash) and req_obj[:error].present?
@@ -121,7 +120,7 @@ class RoutesController < ApplicationController
     end
     req_log.route_id = log[:route_id]
     req_log.response = log[:response_text]
-    req_header = RequestHeader.new(input_data, request.content_type, request_method, request.env['HTTP_ACCEPT'], request.content_length)
+    req_header = RequestHeader.new(input_data, request.content_type, request.method, request.env['HTTP_ACCEPT'], request.content_length)
     res_header = ResponseHeader.new(log[:response].present? ? log[:response].content_type : nil, log[:status_code], log[:response].present? ? log[:response].response : nil)
     req_log.headers << req_header
     req_log.headers << res_header
