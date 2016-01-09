@@ -1,6 +1,10 @@
 class Route < ActiveRecord::Base
   has_many :matchers
   has_many :request_logs
+  
+  has_one :xml_validator, dependent: :destroy
+  
+  attr_accessor :schema_validator
 
   validates_presence_of :uri, :kind, :http_method
   
@@ -30,7 +34,27 @@ class Route < ActiveRecord::Base
       end
     end
   end
-
+  
+  def build_reply(req_doc, content_type, accept)
+    # we run the xml validator , if its defined 
+    if xml_validator && !xml_validator.evaluate(req_doc.to_xml)
+      # the schema validation failed, we return the return
+      return xml_validator.build_reply(self.id)
+    end
+    
+    response = find_matching_reply(req_doc, content_type, accept)
+    if response.nil? 
+      return {:route_id => self.id, :status_code => '409', :response => nil, :response_text => "No Response found." }
+    # elsif response.is_a?(Hash) and response[:error].present?
+    #   return {:route_id => self.id, :status_code => '500', :response => nil, :response_text => "Schema validation error : #{response[:error]}" }
+    else
+      return {:route_id => self.id, :status_code => '200', :response => response, :response_text => response.response}
+    end  
+  end 
+  
+  
+  private
+  
   def find_matching_reply(req_doc, content_type, accept)
     unless self.matchers.empty?
       matched = false

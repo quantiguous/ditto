@@ -33,6 +33,11 @@ class RoutesController < ApplicationController
         redirect_to new_route_path
       else
         @route.save!
+        
+        schema = XmlValidator.find_by_name(@route.schema_validator)
+        schema.route_id = @route.id
+        schema.save!
+        
         matcher_ids.each do |matcher_id|
           matcher = Matcher.find(matcher_id)
           matcher.update_attributes(:route_id => @route.id)
@@ -56,6 +61,11 @@ class RoutesController < ApplicationController
         redirect_to new_route_path
       else
         @route.save!
+        
+        schema = XmlValidator.find_by_name(@route.schema_validator)
+        schema.route_id = @route.id
+        schema.save!
+        
         matcher_ids.each do |matcher_id|
           matcher = Matcher.find(matcher_id)
           matcher.update_attributes(:route_id => @route.id)
@@ -89,7 +99,7 @@ class RoutesController < ApplicationController
 
     route = Route.find_by(:uri => params[:uri])
     
-    req_log = RequestLog.new
+    req_log = RequestLog.new(:request => input_data)
     
     if route.nil?
       log = {:route_id => nil, :status_code => '404', :response => nil}
@@ -104,18 +114,13 @@ class RoutesController < ApplicationController
           log = {:route_id => route.id, :status_code => '400', :response => nil}
           render status: 400, text: "Bad Request."
         else
-          response = route.find_matching_reply(req_obj, request.content_type, request.env['HTTP_ACCEPT'])
-          if response.nil? 
-            log = {:route_id => route.id, :status_code => '409', :response => nil}
-            render status: 409, text: "No Response found." 
-          else
-            log = {:route_id => route.id, :status_code => '200', :response => response}
-            render status: 200, text: response.response 
-          end
+          log = route.build_reply(req_obj, request.content_type, request.env['HTTP_ACCEPT'])
+          render status: log[:status_code], text: log[:response_text]
         end
       end
     end
     req_log.route_id = log[:route_id]
+    req_log.response = log[:response_text]
     req_header = RequestHeader.new(input_data, request.content_type, request_method, request.env['HTTP_ACCEPT'], request.content_length)
     res_header = ResponseHeader.new(log[:response].present? ? log[:response].content_type : nil, log[:status_code], log[:response].present? ? log[:response].response : nil)
     req_log.headers << req_header
@@ -125,7 +130,7 @@ class RoutesController < ApplicationController
 
   private
     def route_params
-      params.require(:route).permit(:kind, :http_method, :uri)
+      params.require(:route).permit(:kind, :http_method, :uri, :schema_validator)
     end
 
 end

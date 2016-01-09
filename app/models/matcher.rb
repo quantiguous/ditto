@@ -6,10 +6,8 @@ class Matcher < ActiveRecord::Base
   has_many :responses, dependent: :destroy
   accepts_nested_attributes_for :responses, :reject_if => lambda { |a| a[:response].blank?}, :allow_destroy => true
   
+  validates_presence_of :name
   validate :presence_of_rules_and_responses
-
-  validates_presence_of :name, :scenario
-  validates_uniqueness_of :name
   
   def presence_of_rules_and_responses
     if self.matches.empty? or self.responses.empty?
@@ -27,8 +25,8 @@ class Matcher < ActiveRecord::Base
         else
           return false
         end
-      when "equal_to"
-        if req.xpath(match.expression).text == match.value
+      when "equal_to"        
+        if (match.value.present? and req.xpath(match.expression).text == match.value) or (match.value.nil? and req.xpath(match.expression).text == "")
           matched = true
         else
           return false

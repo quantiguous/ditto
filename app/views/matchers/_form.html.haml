@@ -15,11 +15,11 @@
     .fields
       = f.label :scenario, :class => 'control-label'
       = f.text_area :scenario, size: "30x4", :style=>"width: 30%; resize: vertical; max-height: 180px;"
-
-		
+			
+			
   %br
     .control-group{:style=>"clear: both;"}
-      %table#rules
+      %table#Matches
         = f.fields_for :matches, :wrapper => false do |rule_form|
           %tr.fields
             %td= rule_form.label :expression, 'Xpath', :class => 'control-label'
@@ -33,14 +33,14 @@
 
             %td= rule_form.link_to_remove "Remove this rule", :class => 'control-label'
 
-        = f.link_to_add "Add a rule", :matches, :data => { :target => "#rules" }
+        = f.link_to_add "Add a  Rule", :matches, :data => { :target => "#Matches" }
 
     .control-group{:style=>"clear: both;"}
       %table#responses
         = f.fields_for :responses, :wrapper => false do |response_form|
           %tr.fields
             %td= response_form.label :content_type, 'Content Type', :class => 'control-label'
-            %td= response_form.select :content_type, options_for_select(Response.options_for_content_type)
+            %td= response_form.select :content_type, options_for_select(Response.options_for_content_type, response_form.object.content_type)
 
             %td= response_form.label :response, 'Response', :class => 'control-label'
             %td= response_form.text_area :response, size: "30x10", :style=>"width: 500px; max-width: 500px; resize: both; height: 100px; max-height: 180px;"

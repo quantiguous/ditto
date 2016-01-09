@@ -1,0 +1,74 @@
+/ .show_ticket
+/   .header-form-main{:style=>'background-color: #F1F2F8; width: 100%; height: 630px; display: inline-block;'}
+/     #ticket-details
+/       %br
+/       %h3
+/         Matcher Details:
+/       %table.table.table-bordered.table-striped.table-hover
+/         .tbody
+/           %tr
+/             %th{:style=>'text-align:left;'}
+/               Name
+/             %td{:style=>'text-align:left;'}
+/               = @matcher.name
+/           %tr
+/             %th{:style=>'text-align:left;'}
+/               Scenario
+/             %td{:style=>'text-align:left;'}
+/               = @matcher.scenario
+/       %br
+/       %h3
+/         Matches:
+/       %table.table.table-bordered.table-striped.table-hover
+/         .thead
+/           %th{:style=>'text-align:left; background-color: lightblue;'}
+/             Expression
+/           %th{:style=>'text-align:left; background-color: lightblue;'}
+/             Eval Criteria
+/           %th{:style=>'text-align:left; background-color: lightblue;'}
+/             Value
+/         .tbody
+/           - @matches.each do |match|
+/             %tr
+/               %td{:style=>'text-align:left;'}
+/                 = match.expression
+/               %td{:style=>'text-align:left;'}
+/                 = match.eval_criteria
+/               %td{:style=>'text-align:left;'}
+/                 = match.value
+/
+/       %br
+/       %h3
+/         Responses:
+/       %table.table.table-bordered.table-striped.table-hover
+/         .thead
+/           %th{:style=>'text-align:left; background-color: lightblue;'}
+/             Content Type
+/           %th{:style=>'text-align:left; background-color: lightblue;'}
+/             Response
+/         .tbody
+/           - @responses.each do |resp|
+/             %tr
+/               %td{:style=>'text-align:left;'}
+/                 = resp.content_type
+/               %td{:style=>'text-align:left;'}
+/                 / = link_to "Show Response", "#", :class => 'response-link', :href => "#responseText", data: { response: resp.response }
+/                 = resp.response
+/
+/ #responseText.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+/   .modal-header
+/     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+/     %h3 Response
+/     #error_message{:style => 'color:red'}
+/   .modal-body{:style => "max-height:450px;"}
+/     .demo-area
+/     %pre#responseText{:style => 'word-wrap: break-word'}
+/       .response{:style => 'word-wrap: break-word'}
+/
+/ :javascript
+/   $(".response-link").on("click", function () {
+/     // alert("hi");
+/     var reply = $(this).data('response');
+/     $(".response").text(reply);
+/     $('#responseText').modal();
+/   });
