@@ -98,12 +98,11 @@ class RoutesController < ApplicationController
 
     route = Route.find_by(:uri => request.path)
     
-    req_log = RequestLog.new(:request => input_data)
-    
     if route.nil?
       log = {:route_id => nil, :status_code => '404', :response => nil}
       render status: 404, text: "#{request.path} not found."
     else
+      req_log = RequestLog.new(:request => input_data)
       if request.method != route.http_method
         log = {:route_id => route.id, :status_code => '405', :response => nil}
         render status: 405, text: "#{request.method} not allowed for #{params[:uri]} route."
@@ -117,19 +116,19 @@ class RoutesController < ApplicationController
           render status: log[:status_code], text: log[:response_text]
         end
       end
+      req_log.route_id = log[:route_id]
+      req_log.response = log[:response_text]
+      req_header = RequestHeader.new(input_data, request.content_type, request.method, request.env['HTTP_ACCEPT'], request.content_length)
+      res_header = ResponseHeader.new(log[:response].present? ? log[:response].content_type : nil, log[:status_code], log[:response].present? ? log[:response].response : nil)
+      req_log.headers << req_header
+      req_log.headers << res_header
+      req_log.save
     end
-    req_log.route_id = log[:route_id]
-    req_log.response = log[:response_text]
-    req_header = RequestHeader.new(input_data, request.content_type, request.method, request.env['HTTP_ACCEPT'], request.content_length)
-    res_header = ResponseHeader.new(log[:response].present? ? log[:response].content_type : nil, log[:status_code], log[:response].present? ? log[:response].response : nil)
-    req_log.headers << req_header
-    req_log.headers << res_header
-    req_log.save
   end
 
   private
     def route_params
-      params.require(:route).permit(:kind, :http_method, :uri, :schema_validator)
+      params.require(:route).permit(:kind, :http_method, :uri, :schema_validator, :opertion_name)
     end
 
 end
