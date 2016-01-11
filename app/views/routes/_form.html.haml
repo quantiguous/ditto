@@ -21,6 +21,9 @@
       = f.label :uri, "URI", :class => 'control-label'
       = f.text_field :uri
     .control-group
+      = f.label :operation_name, "Operation Name", :class => 'control-label'
+      = f.text_field :operation_name
+    .control-group
       = f.label :schema_validator, "Schema Validator", :class => 'control-label'
       = f.select :schema_validator, options_for_select(XmlValidator.all.map {|u| [u.name, u.name]})
 
@@ -59,3 +62,22 @@
   });
 
   $('.saved_request_select').prop("checked", $(this).prop("checked"));
+
+  $("#route_kind").on("change",function(){
+    var kind =  $(this).val();
+    if (kind == 'JSON') {
+      $("#route_operation_name").val('');
+      $("#route_operation_name").prop("disabled",true);
+    }
+    else {
+      $("#route_operation_name").prop("disabled",false);
+    }
+  });
+
+  if (kind == 'JSON') {
+    $("#route_operation_name").val('');
+    $("#route_operation_name").prop("disabled",true);
+  }
+  else {
+    $("#route_operation_name").prop("disabled",false);
+  }

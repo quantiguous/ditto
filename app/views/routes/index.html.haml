@@ -17,6 +17,8 @@
     %th{:style=>'text-align:left; background-color: lightblue;'}
       Kind
     %th{:style=>'text-align:left; background-color: lightblue;'}
+      Operation Name
+    %th{:style=>'text-align:left; background-color: lightblue;'}
     %th{:style=>'text-align:left; background-color: lightblue;'}
     %th{:style=>'text-align:left; background-color: lightblue;'}
       	   
@@ -30,6 +32,11 @@
           = route.http_method
         %td{:style=>'text-align:left;'}
           = route.kind
+        %td{:style=>'text-align:left;'}
+          - if route.operation_name.nil?
+            = "-"
+          - else
+            = route.operation_name
         %td{:style=>'text-align:left;'}
           = link_to 'View Matchers', matchers_path(:route_id => route.id)
         %td{:style=>'text-align:left;'}

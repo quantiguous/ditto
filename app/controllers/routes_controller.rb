@@ -34,9 +34,11 @@ class RoutesController < ApplicationController
       else
         @route.save!
         
-        schema = XmlValidator.find_by_name(@route.schema_validator)
-        schema.route_id = @route.id
-        schema.save!
+        unless @route.schema_validator.nil?
+          schema = XmlValidator.find_by_name(@route.schema_validator)
+          schema.route_id = @route.id
+          schema.save!
+        end
         
         matcher_ids.each do |matcher_id|
           matcher = Matcher.find(matcher_id)
@@ -61,10 +63,12 @@ class RoutesController < ApplicationController
         redirect_to new_route_path
       else
         @route.save!
-        
-        schema = XmlValidator.find_by_name(@route.schema_validator)
-        schema.route_id = @route.id
-        schema.save!
+
+        unless @route.schema_validator.nil?
+          schema = XmlValidator.find_by_name(@route.schema_validator)
+          schema.route_id = @route.id
+          schema.save!
+        end
         
         matcher_ids.each do |matcher_id|
           matcher = Matcher.find(matcher_id)
@@ -96,7 +100,11 @@ class RoutesController < ApplicationController
       input_data = request.body.read
     end
 
-    route = Route.find_by(:uri => request.path)
+    if request.env['HTTP_SOAPACTION'].present?
+      route = Route.find_by(:uri => request.path, :operation_name => request.env['HTTP_SOAPACTION'])
+    else
+      route = Route.find_by(:uri => request.path)
+    end
     
     if route.nil?
       log = {:route_id => nil, :status_code => '404', :response => nil}
@@ -128,7 +136,7 @@ class RoutesController < ApplicationController
 
   private
     def route_params
-      params.require(:route).permit(:kind, :http_method, :uri, :schema_validator, :opertion_name)
+      params.require(:route).permit(:kind, :http_method, :uri, :schema_validator, :operation_name)
     end
 
 end
