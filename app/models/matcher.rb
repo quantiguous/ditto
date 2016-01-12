@@ -7,7 +7,7 @@ class Matcher < ActiveRecord::Base
   accepts_nested_attributes_for :responses, :allow_destroy => true
   
   validates_presence_of :name
-  validate :presence_of_rules_and_responses
+  # validate :presence_of_rules_and_responses
   
   def presence_of_rules_and_responses
     if self.matches.empty? or self.responses.empty?
