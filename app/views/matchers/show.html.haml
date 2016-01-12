@@ -45,12 +45,16 @@
           %th{:style=>'text-align:left; background-color: lightblue;'}
             Content Type
           %th{:style=>'text-align:left; background-color: lightblue;'}
+            Status Code
+          %th{:style=>'text-align:left; background-color: lightblue;'}
             Response
         .tbody
           - @responses.each do |resp|
             %tr
               %td{:style=>'text-align:left;'}
                 = resp.content_type
+              %td{:style=>'text-align:left;'}
+                = resp.status_code
               %td{:style=>'text-align:left;'}
                 / = link_to "Show Response", "#", :class => 'response-link', :href => "#responseText", data: { response: resp.response }
                 = resp.response

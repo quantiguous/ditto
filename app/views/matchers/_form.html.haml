@@ -43,7 +43,10 @@
             %td= response_form.select :content_type, options_for_select(Response.options_for_content_type, response_form.object.content_type)
 
             %td= response_form.label :response, 'Response', :class => 'control-label'
-            %td= response_form.text_area :response, size: "30x10", :style=>"width: 500px; max-width: 500px; resize: both; height: 100px; max-height: 180px;"
+            %td= response_form.text_area :response, :style=>"width: 210px; height: 100px;"
+						
+            %td= response_form.label :status_code, 'Status Code', :class => 'control-label'
+            %td= response_form.text_field :status_code
 
             %td= response_form.link_to_remove "Remove this response", :class => 'control-label'
 

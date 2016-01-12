@@ -4,7 +4,7 @@ class Matcher < ActiveRecord::Base
   accepts_nested_attributes_for :matches, :reject_if => lambda { |a| a[:expression].blank?}, :allow_destroy => true
   
   has_many :responses, dependent: :destroy
-  accepts_nested_attributes_for :responses, :reject_if => lambda { |a| a[:response].blank?}, :allow_destroy => true
+  accepts_nested_attributes_for :responses, :allow_destroy => true
   
   validates_presence_of :name
   validate :presence_of_rules_and_responses
