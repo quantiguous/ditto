@@ -122,7 +122,10 @@ class RoutesController < ApplicationController
           log = {:route_id => route.id, :status_code => '400', :response => nil}
           render status: 400, text: "Bad Request."
         else
-          log = route.build_reply(req_obj, request.content_type, request.env['HTTP_ACCEPT'])
+          headers = {'Accept' => request.env['HTTP_ACCEPT'], 
+                     'X-QG-CI-URI' => request.env['HTTP_X_QG_CI_URI'], 
+                     'X-QG-CI-SCENARIO' => request.env['HTTP_X_QG_CI_SCENARIO']}
+          log = route.build_reply(req_obj, request.content_type, headers)
           render status: log[:status_code], text: log[:response_text]
         end
       end

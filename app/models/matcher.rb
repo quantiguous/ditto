@@ -15,7 +15,7 @@ class Matcher < ActiveRecord::Base
     end
   end
 
-  def evaluate(req)
+  def evaluate(req, headers)
     matched = nil
     self.matches.each_with_index do |match, index| 
       case match.eval_criteria
@@ -27,6 +27,12 @@ class Matcher < ActiveRecord::Base
         end
       when "equal_to"        
         if (match.value.present? and req.xpath(match.expression).text == match.value) or (match.value.nil? and req.xpath(match.expression).text == "")
+          matched = true
+        else
+          return false
+        end
+      when "header_equal_to"
+        if headers["#{match.expression}"] == match.value
           matched = true
         else
           return false

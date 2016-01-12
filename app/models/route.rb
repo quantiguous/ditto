@@ -16,6 +16,8 @@ class Route < ActiveRecord::Base
     [['GET','GET'],['POST','POST'],['PUT','PUT'],['PATCH','PATCH'],['DELETE','DELETE']]
   end
 
+  
+
   def parse_request(req)
     if self.kind == "SOAP"
       begin
@@ -35,14 +37,14 @@ class Route < ActiveRecord::Base
     end
   end
   
-  def build_reply(req_doc, content_type, accept)
+  def build_reply(req_doc, content_type, headers)
     # we run the xml validator , if its defined 
     if xml_validator && !xml_validator.evaluate(req_doc.to_xml)
       # the schema validation failed, we return the return
       return xml_validator.build_reply(self.id)
     end
     
-    response = find_matching_reply(req_doc, content_type, accept)
+    response = find_matching_reply(req_doc, content_type, headers)
     if response.nil? 
       return {:route_id => self.id, :status_code => '409', :response => nil, :response_text => "No Response found." }
     # elsif response.is_a?(Hash) and response[:error].present?
@@ -55,11 +57,12 @@ class Route < ActiveRecord::Base
   
   private
   
-  def find_matching_reply(req_doc, content_type, accept)
+  def find_matching_reply(req_doc, content_type, headers)
     unless self.matchers.empty?
       matched = false
+      accept = headers['Accept']
       self.matchers.each_with_index do |matcher, index|
-        if matcher.evaluate(req_doc) 
+        if matcher.evaluate(req_doc, headers) 
           matched = true
           response = matcher.find_response(content_type, accept)
           return response
