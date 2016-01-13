@@ -94,7 +94,7 @@ class RoutesController < ApplicationController
   
   def execute_route
     
-    if request.method == "GET"
+    if request.method == "GET" || request.method == "PUT"
       input_data = request.query_parameters
     elsif request.method == "POST"
       input_data = request.body.read
