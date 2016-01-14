@@ -2,15 +2,15 @@ class ApiController < ApplicationController
   def execute_route
     
     if request.method == "GET" || request.method == "PUT"
-      input_data = nil #request.query_parameters
+      input_data = request.query_parameters
     elsif request.method == "POST"
       input_data = request.body.read
     end
 
     # we find matching routes for a SOAP (if SOAPAction is present) , and non SOAP routes in other cases
     # requests necessarily need to send a SOAPAction header. if they need to match a SOAP Route
-    if request.env['HTTP_SOAPACTION'].present?
-      route = Route.find_by(:uri => request.path, :operation_name => request.env['HTTP_SOAPACTION'].gsub(/\"/, ""))
+    if request.env['HTTP_SOAPACTION'].present? and request.env['HTTP_SOAPACTION'] != '""'
+      route = Route.find_by(:uri => request.path, :kind => 'SOAP', :operation_name => request.env['HTTP_SOAPACTION'].gsub(/\"/, ""))
     else
       route = Route.where(:uri => request.path).where.not(:kind => 'SOAP').first
     end
