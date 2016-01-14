@@ -12,7 +12,7 @@ Ditto::Application.routes.draw do
 
   match '/route/execute_route/:uri', to: 'routes#execute_route', via: :all
   
-  match "*path", to: "routes#execute_route", via: :all
+  match "*path", to: "api#execute_route", via: :all
 
   ActiveAdmin.routes(self)
 end

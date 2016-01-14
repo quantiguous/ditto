@@ -36,6 +36,7 @@ gem "daemons"
 gem "sqlite3"
 gem "json"
 gem 'oga'
+gem 'oj'
 gem 'gyoku', '~> 1.0'
 
 # Used only if oracle db is being used

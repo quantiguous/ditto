@@ -28,7 +28,7 @@ class Route < ActiveRecord::Base
       end
     else
       begin
-        xml_str = Gyoku.xml(req)
+        xml_str = Gyoku.xml(Oj.load(req))
         document = Oga.parse_xml(xml_str)
         return document
       rescue Exception => e
