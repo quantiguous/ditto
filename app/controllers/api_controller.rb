@@ -2,7 +2,7 @@ class ApiController < ApplicationController
   def execute_route
     
     if request.method == "GET" || request.method == "PUT"
-      input_data = request.query_parameters
+      input_data = nil #request.query_parameters
     elsif request.method == "POST"
       input_data = request.body.read
     end
@@ -25,15 +25,15 @@ class ApiController < ApplicationController
         render status: 405, text: "#{request.method} not allowed for #{params[:uri]} route."
       else
         req_obj = route.parse_request(input_data)
-        if req_obj.is_a?(Hash) and req_obj[:error].present?
-          log = {:route_id => route.id, :status_code => '400', :response => nil}
-          render status: 400, text: "Bad Request."
-        else
+        if req_obj.instance_of?(Oga::XML::Document)
           headers = {'Accept' => request.env['HTTP_ACCEPT'], 
                      'X-QG-CI-URI' => request.env['HTTP_X_QG_CI_URI'], 
                      'X-QG-CI-SCENARIO' => request.env['HTTP_X_QG_CI_SCENARIO']}
           log = route.build_reply(req_obj, request.content_type, headers)
           render status: log[:status_code], text: log[:response_text]
+        else
+          log = {:route_id => route.id, :status_code => '400', :response => nil}
+          render status: 400, text: "Bad Request."
         end
       end
       req_log.route_id = log[:route_id]

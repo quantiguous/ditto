@@ -19,6 +19,11 @@ class Route < ActiveRecord::Base
   
 
   def parse_request(req)
+    # parsing of query_params is not yet supported
+    if req.empty? 
+      return Oga.parse_xml('<todo/>')
+    end
+    
     if self.kind == "SOAP"
       begin
         document = Oga.parse_xml(req, :strict => true)
