@@ -1,7 +1,7 @@
 class Matcher < ActiveRecord::Base
   
   has_many :matches, dependent: :destroy
-  accepts_nested_attributes_for :matches, :reject_if => lambda { |a| a[:expression].blank?}, :allow_destroy => true
+  accepts_nested_attributes_for :matches, :allow_destroy => true
   
   has_many :responses, dependent: :destroy
   accepts_nested_attributes_for :responses, :allow_destroy => true
@@ -33,6 +33,13 @@ class Matcher < ActiveRecord::Base
         end
       when "header_equal_to"
         if headers["#{match.expression}".upcase].casecmp(match.value) == 0
+          matched = true
+        else
+          return false
+        end
+      when "starts_with"
+        req = req.split('~')
+        if req.first.upcase.casecmp(match.value) == 0
           matched = true
         else
           return false

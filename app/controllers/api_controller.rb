@@ -25,7 +25,7 @@ class ApiController < ApplicationController
         render status: 405, text: "#{request.method} not allowed for #{params[:uri]} route."
       else
         req_obj = route.parse_request(input_data)
-        if req_obj.instance_of?(Oga::XML::Document)
+        if req_obj.instance_of?(Oga::XML::Document) or route.kind == 'PLAIN-TEXT'
           headers = {'Accept' => request.env['HTTP_ACCEPT'], 
                      'X-QG-CI-URI' => request.env['HTTP_X_QG_CI_URI'], 
                      'X-QG-CI-SCENARIO' => request.env['HTTP_X_QG_CI_SCENARIO']}

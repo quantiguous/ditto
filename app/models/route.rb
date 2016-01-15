@@ -9,7 +9,7 @@ class Route < ActiveRecord::Base
   validates_presence_of :uri, :kind, :http_method
   
   def self.options_for_kind
-    [['SOAP','SOAP'],['JSON','JSON']]
+    [['SOAP','SOAP'],['JSON','JSON'],['PLAIN-TEXT','PLAIN-TEXT']]
   end
   
   def self.options_for_http_method
@@ -31,7 +31,7 @@ class Route < ActiveRecord::Base
       rescue Exception => e
         return {error: e.message}
       end
-    else
+    elsif self.kind == "JSON"
       begin
         xml_str = Gyoku.xml(Oj.load(req))
         document = Oga.parse_xml(xml_str)
@@ -39,6 +39,8 @@ class Route < ActiveRecord::Base
       rescue Exception => e
         return {error: e.message}
       end
+    else
+      return req
     end
   end
   
