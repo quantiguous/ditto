@@ -9,7 +9,7 @@ class Route < ActiveRecord::Base
   validates_presence_of :uri, :kind, :http_method
   
   def self.options_for_kind
-    [['SOAP','SOAP'],['JSON','JSON'],['PLAIN-TEXT','PLAIN-TEXT']]
+    [['SOAP','SOAP'],['XML','XML'],['JSON','JSON'],['PLAIN-TEXT','PLAIN-TEXT']]
   end
   
   def self.options_for_http_method
@@ -18,26 +18,32 @@ class Route < ActiveRecord::Base
 
   
 
-  def parse_request(req)
+  def parse_request(req, content_type)
+
     # parsing of query_params is not yet supported
     if req.empty? 
       return Oga.parse_xml('<todo/>')
     end
     
-    if self.kind == "SOAP"
-      begin
-        document = Oga.parse_xml(req, :strict => true)
-        return document
-      rescue Exception => e
-        return {error: e.message}
-      end
-    elsif self.kind == "JSON"
-      begin
-        xml_str = Gyoku.xml(Oj.load(req))
-        document = Oga.parse_xml(xml_str)
-        return document
-      rescue Exception => e
-        return {error: e.message}
+    parsed_application_type = content_type.split("/").first
+    parsed_content_type = content_type.split("/").last
+    
+    if (parsed_application_type == "application")
+      if (parsed_content_type.include?("soap") == true) || (parsed_content_type.include?("xml") == true) 
+        begin
+          document = Oga.parse_xml(req, :strict => true)
+          return document
+        rescue Exception => e
+          return {error: e.message}
+        end
+      elsif (parsed_content_type.include?("json") == true)
+        begin
+          xml_str = Gyoku.xml(Oj.load(req))
+          document = Oga.parse_xml(xml_str)
+          return document
+        rescue Exception => e
+          return {error: e.message}
+        end
       end
     else
       return req

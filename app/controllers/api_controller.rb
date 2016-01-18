@@ -1,6 +1,5 @@
 class ApiController < ApplicationController
-  def execute_route
-    
+  def execute_route    
     if request.method == "GET" || request.method == "PUT" || request.method == "DELETE"
       input_data = request.query_parameters
     elsif request.method == "POST"
@@ -14,7 +13,7 @@ class ApiController < ApplicationController
     else
       route = Route.where(:uri => request.path).where.not(:kind => 'SOAP').first
     end
-    
+
     if route.nil?
       log = {:route_id => nil, :status_code => '404', :response => nil}
       render status: 404, text: "#{request.path} not found."
@@ -24,7 +23,7 @@ class ApiController < ApplicationController
         log = {:route_id => route.id, :status_code => '405', :response => nil}
         render status: 405, text: "#{request.method} not allowed for #{params[:uri]} route."
       else
-        req_obj = route.parse_request(input_data)
+        req_obj = route.parse_request(input_data, request.content_type)
         if req_obj.instance_of?(Oga::XML::Document) or route.kind == 'PLAIN-TEXT'
           headers = {'Accept' => request.env['HTTP_ACCEPT'], 
                      'X-QG-CI-URI' => request.env['HTTP_X_QG_CI_URI'], 
