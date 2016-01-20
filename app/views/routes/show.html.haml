@@ -1,1 +1,29 @@
-= link_to "Show Requests Logs", request_logs_path(route_id: @route.id)
+%br
+%h3 Matchers
+%br
+= link_to 'New Matcher', new_matcher_path
+%br
+%br
+= "Total Count: #{@route.matchers.count}"
+%br
+%br
+%table.table.table-bordered.table-striped.table-hover
+  .thead
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Matcher Name
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Scenario
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      	   
+			
+  .tbody
+    - @route.matchers.each do |matcher|
+      %tr
+        %td{:style=>'text-align:left;'}
+          = matcher.name
+        %td{:style=>'text-align:left;'}
+          = matcher.scenario
+        %td{:style=>'text-align:left;'}
+          = link_to 'View' , matcher
+					
+= link_to "Show Requests Logs", request_logs_path(route_id: @route.id)					

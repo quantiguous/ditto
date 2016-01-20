@@ -38,7 +38,7 @@
           - else
             = route.operation_name
         %td{:style=>'text-align:left;'}
-          = link_to 'View Matchers', matchers_path(:route_id => route.id)
+          = link_to 'Show', route_path(route)
         %td{:style=>'text-align:left;'}
           = link_to 'Edit', edit_route_path(route)
         %td{:style=>'text-align:left;'}

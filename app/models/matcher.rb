@@ -1,5 +1,5 @@
 class Matcher < ActiveRecord::Base
-  
+  belongs_to :route
   has_many :matches, dependent: :destroy
   accepts_nested_attributes_for :matches, :allow_destroy => true
   
