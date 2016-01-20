@@ -59,7 +59,7 @@ class Route < ActiveRecord::Base
     
     response = find_matching_reply(req_doc, content_type, headers)
     if response.nil? 
-      return {:route_id => self.id, :status_code => '409', :response => nil, :response_text => "No Response found." }
+      return {:route_id => self.id, :status_code => '501', :response => nil, :response_text => "No Response found." }
     # elsif response.is_a?(Hash) and response[:error].present?
     #   return {:route_id => self.id, :status_code => '500', :response => nil, :response_text => "Schema validation error : #{response[:error]}" }
     else
@@ -74,12 +74,25 @@ class Route < ActiveRecord::Base
     unless self.matchers.empty?
       matched = false
       accept = headers['Accept']
+      
+      # the list of matchers that matched
+      matched_matchers = []
+      
       self.matchers.each_with_index do |matcher, index|
         if matcher.evaluate(req_doc, headers) 
+          matched_matchers << matcher
           matched = true
-          response = matcher.find_response(content_type, accept)
-          return response
         end
+      end
+
+      # when we have a list of matched matchers, we choose the most selective one
+      # a select matcher is one, that has the maximum number of 'matches' or 'rules'
+      # when there are is more than one matcher with the same number of 'rules', we pick a random matcher
+      # a better way would be to assign priority to the type of match ( headers have a different priority than the body )
+      if matched == true
+        sorted_asc_matchers = matched_matchers.sort{|left,right| left.matches.size <=> right.matches.size}
+        response = sorted_asc_matchers.last.find_response(content_type, accept)
+        return response
       end
       
       if matched == false

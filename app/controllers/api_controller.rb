@@ -27,13 +27,12 @@ class ApiController < ApplicationController
         req_obj = route.parse_request(input_data, request.content_type)
         if req_obj.instance_of?(Oga::XML::Document) or route.kind == 'PLAIN-TEXT'
           headers = {'Accept' => request.env['HTTP_ACCEPT'], 
+                     'X-QG-CI-SVC' => request.env['HTTP_X_QG_CI_SVC'], 
                      'X-QG-CI-URI' => request.env['HTTP_X_QG_CI_URI'], 
                      'X-QG-CI-SCENARIO' => request.env['HTTP_X_QG_CI_SCENARIO']}
           log = route.build_reply(req_obj, request.content_type, headers)
           
           # if a delay is expected in the response, we sleep, a maximum of 60 secs is allowed
-          p request.env['HTTP_X_QG_CI_DELAY']
-          p 'helllll'
           if (1..60).include?(request.env['HTTP_X_QG_CI_DELAY'].to_i)
             sleep request.env['HTTP_X_QG_CI_DELAY'].to_i
           end

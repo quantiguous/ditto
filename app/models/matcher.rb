@@ -32,7 +32,7 @@ class Matcher < ActiveRecord::Base
           return false
         end
       when "header_equal_to"
-        if headers["#{match.expression}".upcase].casecmp(match.value) == 0
+        if headers["#{match.expression}".upcase].present? && headers["#{match.expression}".upcase].casecmp(match.value) == 0
           matched = true
         else
           return false
@@ -46,6 +46,7 @@ class Matcher < ActiveRecord::Base
         end
       end
     end
+    
     matched.nil? ? false : true
   end
 
