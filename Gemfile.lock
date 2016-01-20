@@ -253,6 +253,7 @@ GEM
       activesupport (>= 3.0.0)
     kgio (2.9.3)
     libv8 (3.16.14.11)
+    liquid (3.0.6)
     listen (3.0.3)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -512,6 +513,7 @@ DEPENDENCIES
   haml-rails
   jquery-rails (= 2.0.2)
   json
+  liquid
   mime-types
   nested_form
   oga

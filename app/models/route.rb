@@ -63,7 +63,7 @@ class Route < ActiveRecord::Base
     # elsif response.is_a?(Hash) and response[:error].present?
     #   return {:route_id => self.id, :status_code => '500', :response => nil, :response_text => "Schema validation error : #{response[:error]}" }
     else
-      return {:route_id => self.id, :status_code => response.status_code, :response => response, :response_text => response.response}
+      return {:route_id => self.id, :status_code => response.status_code, :response => response, :response_text => Liquid::Template.parse(response.response).render}
     end  
   end 
   
@@ -115,3 +115,5 @@ class Route < ActiveRecord::Base
   end
 
 end
+
+
