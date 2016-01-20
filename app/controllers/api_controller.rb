@@ -38,7 +38,7 @@ class ApiController < ApplicationController
             sleep request.env['HTTP_X_QG_CI_DELAY'].to_i
           end
           
-          render status: log[:status_code], text: log[:response_text]
+          render status: log[:status_code], text: log[:response_text], content_type: log[:response].content_type 
         else
           log = {:route_id => route.id, :status_code => '400', :response => nil}
           render status: 400, text: "Bad Request."
