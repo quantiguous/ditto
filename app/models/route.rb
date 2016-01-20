@@ -79,7 +79,7 @@ class Route < ActiveRecord::Base
       matched_matchers = []
       
       self.matchers.each_with_index do |matcher, index|
-        if matcher.evaluate(req_doc, headers) 
+        if matcher.evaluate(content_type, req_doc, headers) 
           matched_matchers << matcher
           matched = true
         end

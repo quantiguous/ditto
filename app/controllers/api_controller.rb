@@ -11,7 +11,8 @@ class ApiController < ApplicationController
     # requests necessarily need to send a SOAPAction header. if they need to match a SOAP Route
     if request.env['HTTP_SOAPACTION'].present? and request.env['HTTP_SOAPACTION'] != '""'
       route = Route.find_by(:uri => request.path, :kind => 'SOAP', :operation_name => request.env['HTTP_SOAPACTION'].gsub(/\"/, ""))
-    else
+    end
+    if route.nil?
       route = Route.where(:uri => request.path).where.not(:kind => 'SOAP').first
     end
     
