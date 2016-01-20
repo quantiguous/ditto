@@ -15,7 +15,7 @@ class Matcher < ActiveRecord::Base
     end
   end
 
-  def evaluate(req, headers)
+  def evaluate(content_type, req, headers)
     matched = nil
     self.matches.each_with_index do |match, index| 
       case match.eval_criteria
@@ -38,8 +38,18 @@ class Matcher < ActiveRecord::Base
           return false
         end
       when "starts_with"
-        req = req.split('~')
-        if req.first.upcase.casecmp(match.value) == 0
+        requestString = ''
+             
+        if ContentType.is_plain(content_type)
+          requestString = req
+        end
+        if ContentType.is_xml(content_type)
+          if match.expression.present?        
+            requestString = req.xpath(match.expression).text
+          end
+        end
+        
+        if requestString.upcase.starts_with?(match.value.upcase)
           matched = true
         else
           return false
