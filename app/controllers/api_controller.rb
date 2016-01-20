@@ -1,5 +1,6 @@
 class ApiController < ApplicationController
-  def execute_route    
+  def execute_route
+    
     if request.method == "GET" || request.method == "PUT" || request.method == "DELETE"
       input_data = request.query_parameters
     elsif request.method == "POST"
@@ -13,7 +14,7 @@ class ApiController < ApplicationController
     else
       route = Route.where(:uri => request.path).where.not(:kind => 'SOAP').first
     end
-
+    
     if route.nil?
       log = {:route_id => nil, :status_code => '404', :response => nil}
       render status: 404, text: "#{request.path} not found."
@@ -29,6 +30,14 @@ class ApiController < ApplicationController
                      'X-QG-CI-URI' => request.env['HTTP_X_QG_CI_URI'], 
                      'X-QG-CI-SCENARIO' => request.env['HTTP_X_QG_CI_SCENARIO']}
           log = route.build_reply(req_obj, request.content_type, headers)
+          
+          # if a delay is expected in the response, we sleep, a maximum of 60 secs is allowed
+          p request.env['HTTP_X_QG_CI_DELAY']
+          p 'helllll'
+          if (1..60).include?(request.env['HTTP_X_QG_CI_DELAY'].to_i)
+            sleep request.env['HTTP_X_QG_CI_DELAY'].to_i
+          end
+          
           render status: log[:status_code], text: log[:response_text]
         else
           log = {:route_id => route.id, :status_code => '400', :response => nil}
