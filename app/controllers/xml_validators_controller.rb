@@ -1,4 +1,6 @@
 class XmlValidatorsController < ApplicationController
+  before_filter :authenticate_user!
+  before_filter :block_inactive_user!
   
   def index
     xml_validators = XmlValidator.order("id desc")

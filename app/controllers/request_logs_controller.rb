@@ -1,5 +1,7 @@
 class RequestLogsController < ApplicationController
-
+  before_filter :authenticate_user!
+  before_filter :block_inactive_user!
+  
   def index
     if !params[:route_id].present?
       request_logs = RequestLog.order("id desc")

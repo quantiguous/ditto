@@ -1,5 +1,6 @@
 class RoutesController < ApplicationController
-  # before_filter :restrict_access
+  before_filter :authenticate_user!
+  before_filter :block_inactive_user!
 
   def index
     routes = Route.order("id desc")
