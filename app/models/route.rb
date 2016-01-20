@@ -95,21 +95,9 @@ class Route < ActiveRecord::Base
         return response
       end
       
+      # if no match is found, then we use the first matcher
       if matched == false
-        if !accept.nil?
-          accept = accept.split(",")
-          res = nil
-          accept.each do |acc|
-            res = self.matchers.first.responses.find_by(:content_type => acc)
-          end          
-          res = self.matchers.first.responses.first if res.nil?
-        elsif (accept.nil?) and (content_type.present?) 
-          res = self.matchers.first.responses.find_by(:content_type => content_type)
-          res = self.matchers.first.responses.first if res.nil?
-        else
-          res = self.matchers.first.responses.first
-        end
-        return res
+        return self.matchers.first.find_response(content_type, accept)
       end
     end
   end

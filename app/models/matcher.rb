@@ -60,5 +60,21 @@ class Matcher < ActiveRecord::Base
     matched.nil? ? false : true
   end
 
+  def find_response(content_type, accept)
+    if !accept.nil?
+      accept = accept.split(",")
+      res = nil
+      accept.each do |acc|
+        res = self.responses.find_by(:content_type => acc)
+      end
+      res = self.responses.first if res.nil?
+    elsif (accept.nil?) and (content_type.present?) 
+      res = self.responses.find_by(:content_type => content_type)
+      res = self.responses.first if res.nil?
+    else
+      res = self.responses.first
+    end
+    return res
+  end  
 
 end
