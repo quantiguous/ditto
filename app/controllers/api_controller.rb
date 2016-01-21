@@ -35,7 +35,9 @@ class ApiController < ApplicationController
           
           # if a delay is expected in the response, we sleep, a maximum of 60 secs is allowed
           if (1..60).include?(request.env['HTTP_X_QG_CI_DELAY'].to_i)
-            sleep request.env['HTTP_X_QG_CI_DELAY'].to_i
+            if request.env['HTTP_X_QG_CI_URI'] = request.path
+              sleep request.env['HTTP_X_QG_CI_DELAY'].to_i
+            end
           end
           
           render status: log[:status_code], text: log[:response_text], content_type: log[:response].content_type 
