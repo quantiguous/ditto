@@ -8,7 +8,7 @@ class RequestLogsController < ApplicationController
     else
       @route = Route.find(params[:route_id]) rescue nil
       if !@route.nil?
-        request_logs = @route.request_logs
+        request_logs = @route.request_logs.order("id desc")
       else
         flash[:notice] = "Route with id #{params[:route_id]} doesn't exists."
         redirect_to "/"
