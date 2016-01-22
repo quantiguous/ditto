@@ -21,6 +21,7 @@
     %th{:style=>'text-align:left; background-color: lightblue;'}
     %th{:style=>'text-align:left; background-color: lightblue;'}
     %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
       	   
 			
   .tbody
@@ -41,5 +42,7 @@
           = link_to 'Show', route_path(route)
         %td{:style=>'text-align:left;'}
           = link_to 'Edit', edit_route_path(route)
+        %td{:style=>'text-align:left;'}
+          = link_to 'Delete', route, :method => :delete, :data => { :confirm => 'Are you sure?' }
         %td{:style=>'text-align:left;'}
           = link_to "Show Requests Logs", request_logs_path(route_id: route.id)					

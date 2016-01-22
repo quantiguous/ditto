@@ -21,6 +21,13 @@ class RoutesController < ApplicationController
     @route = Route.find(params[:id])
     @matchers = Matcher.all
   end
+  
+  def destroy
+    @route = Route.find(params[:id])
+    @route.destroy
+    flash[:alert] = 'Route deleted successfuly'
+    redirect_to routes_path
+  end 
 
   def create
     @route = Route.new(route_params)
@@ -71,14 +78,6 @@ class RoutesController < ApplicationController
       @route.reload
       flash[:alert] = 'Someone edited the route the same time you did. Please re-apply your changes to the route.'
       render "edit"
-  end
-
-  def destroy
-    @route.destroy
-    respond_to do |format|
-      format.html { redirect_to routes_url, notice: 'Route was successfully destroyed.' }
-      format.json { head :no_content }
-    end
   end
   
 

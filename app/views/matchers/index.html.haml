@@ -15,6 +15,8 @@
     %th{:style=>'text-align:left; background-color: lightblue;'}
       Scenario
     %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
       	   
 			
   .tbody
@@ -26,3 +28,7 @@
           = matcher.scenario
         %td{:style=>'text-align:left;'}
           = link_to 'View' , matcher
+        %td{:style=>'text-align:left;'}
+          = link_to 'Edit', edit_matcher_path(matcher)
+        %td{:style=>'text-align:left;'}
+          = link_to 'Delete', matcher, :method => :delete, :data => { :confirm => 'Are you sure?' }

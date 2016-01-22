@@ -51,18 +51,17 @@ class MatchersController < ApplicationController
       redirect_to @matcher
     end
     rescue ActiveRecord::StaleObjectError
-      @bank.reload
+      @matcher.reload
       flash[:alert] = 'Someone edited the matcher the same time you did. Please re-apply your changes to the matcher.'
       render "edit"
   end
 
   def destroy
+    @matcher = Matcher.find(params[:id])
     @matcher.destroy
-    respond_to do |format|
-      format.html { redirect_to matchers_url, notice: 'Matcher was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+    flash[:alert] = 'Matcher deleted successfuly'
+    redirect_to matchers_path
+  end 
 
   private
     # Never trust parameters from the scary internet, only allow the white list through.
