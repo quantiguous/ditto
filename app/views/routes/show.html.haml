@@ -1,5 +1,17 @@
 %br
-%h3 Matchers
+%h3 Route
+= link_to "Edit", edit_route_path
+%br
+%br
+= "URI: #{@route.uri}"
+%br
+#br
+Schema Validator: 
+- if @route.xml_validator.present?
+  = link_to "#{@route.xml_validator.name}", @route.xml_validator
+- else
+  = '-'
+%br
 %br
 = link_to 'New Matcher', new_matcher_path
 %br

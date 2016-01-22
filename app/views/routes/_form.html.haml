@@ -25,7 +25,7 @@
       = f.text_field :operation_name
     .control-group
       = f.label :schema_validator, "Schema Validator", :class => 'control-label'
-      = f.select :schema_validator, options_for_select(XmlValidator.all.map {|u| [u.name, u.name]})
+      = f.select :xml_validator_id, options_for_select(XmlValidator.all.map {|u| [u.name, u.id]}, :selected => f.object.xml_validator_id), :include_blank => true
 
   %br
   %h3 Select Macther(s) :

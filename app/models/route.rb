@@ -2,10 +2,8 @@ class Route < ActiveRecord::Base
   has_many :matchers
   has_many :request_logs
   
-  has_one :xml_validator, dependent: :destroy
+  belongs_to :xml_validator
   
-  attr_accessor :schema_validator
-
   validates_presence_of :uri, :kind, :http_method
   
   def self.options_for_kind
@@ -56,7 +54,7 @@ class Route < ActiveRecord::Base
       # the schema validation failed, we return the return
       return xml_validator.build_reply(self.id)
     end
-    
+
     response = find_matching_reply(req_doc, content_type, headers)
     if response.nil? 
       return {:route_id => self.id, :status_code => '501', :response => nil, :response_text => "No Response found." }

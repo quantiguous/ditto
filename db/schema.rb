@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151231071213) do
+ActiveRecord::Schema.define(version: 20160122070455) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -121,10 +121,12 @@ ActiveRecord::Schema.define(version: 20151231071213) do
   create_table "responses", force: :cascade do |t|
     t.text     "response"
     t.string   "content_type"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.integer  "matcher_id"
     t.integer  "match_id"
+    t.integer  "xml_validator_id"
+    t.string   "status_code"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -138,13 +140,8 @@ ActiveRecord::Schema.define(version: 20151231071213) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
   add_index "roles", ["name"], name: "index_roles_on_name"
 
-  create_table "routes", force: :cascade do |t|
-    t.string   "uri",         null: false
-    t.string   "kind"
-    t.string   "http_method"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
+# Could not dump table "routes" because of following NoMethodError
+#   undefined method `[]' for nil:NilClass
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                             default: "",    null: false
@@ -175,5 +172,13 @@ ActiveRecord::Schema.define(version: 20151231071213) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+
+  create_table "xml_validators", force: :cascade do |t|
+    t.text    "xml_schema"
+    t.integer "route_id"
+    t.string  "name"
+  end
+
+  add_index "xml_validators", ["name"], name: "index_xml_validators_on_name", unique: true
 
 end

@@ -61,16 +61,10 @@ class RoutesController < ApplicationController
       redirect_to new_route_path
     else
       if !@route.valid?
-        redirect_to new_route_path
+        redirect_to edit_route_path
       else
         @route.save!
 
-        unless @route.schema_validator.nil?
-          schema = XmlValidator.find_by_name(@route.schema_validator)
-          schema.route_id = @route.id
-          schema.save!
-        end
-        
         matcher_ids.each do |matcher_id|
           matcher = Matcher.find(matcher_id)
           matcher.update_attributes(:route_id => @route.id)
@@ -142,7 +136,7 @@ class RoutesController < ApplicationController
 
   private
     def route_params
-      params.require(:route).permit(:kind, :http_method, :uri, :schema_validator, :operation_name)
+      params.require(:route).permit(:kind, :http_method, :uri, :xml_validator_id, :operation_name)
     end
 
 end

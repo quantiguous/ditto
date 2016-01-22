@@ -18,6 +18,7 @@ class Matcher < ActiveRecord::Base
   def evaluate(content_type, req, headers)
     matched = nil
     self.matches.each_with_index do |match, index| 
+      p "trying #{match}"
       case match.eval_criteria
       when "exists"
         if req.xpath(match.expression).present?
@@ -26,7 +27,11 @@ class Matcher < ActiveRecord::Base
           return false
         end
       when "equal_to"        
-        if (match.value.present? and req.xpath(match.expression).text == match.value) or (match.value.nil? and req.xpath(match.expression).text == "")
+        p match.value
+        p match.expression
+        p req.to_xml
+        if (match.value.present? and req.xpath(match.expression).text == match.value) or 
+           (match.value.nil? and req.xpath(match.expression).text == "")
           matched = true
         else
           return false
