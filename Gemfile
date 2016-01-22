@@ -37,6 +37,7 @@ gem "sqlite3"
 gem "json"
 gem 'oga'
 gem 'oj'
+gem 'ox'
 gem 'gyoku', '~> 1.0'
 gem 'liquid'
 

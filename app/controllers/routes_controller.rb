@@ -35,12 +35,6 @@ class RoutesController < ApplicationController
       else
         @route.save!
         
-        unless @route.schema_validator.nil?
-          schema = XmlValidator.find_by_name(@route.schema_validator)
-          schema.route_id = @route.id
-          schema.save!
-        end
-        
         matcher_ids.each do |matcher_id|
           matcher = Matcher.find(matcher_id)
           matcher.update_attributes(:route_id => @route.id)
