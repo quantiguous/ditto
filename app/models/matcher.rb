@@ -17,8 +17,7 @@ class Matcher < ActiveRecord::Base
 
   def evaluate(content_type, req, headers)
     matched = nil
-    self.matches.each_with_index do |match, index| 
-      p "trying #{match}"
+    self.matches.each_with_index do |match, index|
       case match.eval_criteria
       when "exists"
         if req.xpath(match.expression).present?
@@ -26,10 +25,7 @@ class Matcher < ActiveRecord::Base
         else
           return false
         end
-      when "equal_to"        
-        p match.value
-        p match.expression
-        p req.to_xml
+      when "equal_to"   
         if (match.value.present? and req.xpath(match.expression).text == match.value) or 
            (match.value.nil? and req.xpath(match.expression).text == "")
           matched = true
@@ -42,7 +38,7 @@ class Matcher < ActiveRecord::Base
         else
           return false
         end
-      when "starts_with"
+      when "starts_with" , "contains", "ends_with"
         requestString = ''
              
         if ContentType.is_plain(content_type)
@@ -54,7 +50,9 @@ class Matcher < ActiveRecord::Base
           end
         end
         
-        if requestString.upcase.starts_with?(match.value.upcase)
+        if (match.eval_criteria == "starts_with" and requestString.upcase.starts_with?(match.value.upcase)) or
+          (match.eval_criteria == "contains" and requestString.upcase.include?(match.value.upcase)) or
+          (match.eval_criteria == "ends_with" and requestString.upcase.ends_with?(match.value.upcase))
           matched = true
         else
           return false
