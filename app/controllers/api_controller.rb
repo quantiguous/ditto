@@ -57,7 +57,7 @@ class ApiController < ApplicationController
             end
           end
           
-          render status: log[:status_code], text: log[:response_text], content_type: log[:response].try(content_type)
+          render status: log[:status_code], text: log[:response_text], content_type: log[:response].try(:content_type)
         else
           log = {:route_id => route.id, :status_code => '400', :response => nil}
           render status: 400, text: "Bad Request."
