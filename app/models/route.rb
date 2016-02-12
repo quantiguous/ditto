@@ -43,9 +43,8 @@ class Route < ActiveRecord::Base
           return {error: e.message}
         end
       end
-    else
-      return req
     end
+    return Oga.parse_xml('<todo/>')
   end
   
   def build_reply(req_doc, content_type, headers)
