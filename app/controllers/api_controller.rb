@@ -24,7 +24,7 @@ class ApiController < ApplicationController
         routes = Route.where(:http_method => request.method).where("uri LIKE ?", segment_1).where.not(:kind => 'SOAP')
         matched_routes = routes.select { |route|
           # a variable segment can have word characters and a dot
-          regex = Regexp.new('^' + route.uri.gsub(/{[\w|\.]+}/,'[\w|\.|-|~|:|\?|#|\[|\]|@|!|\$|&|\'|\(|\)|\*|\+|,|;|=]+') + '$')
+          regex = Regexp.new('^' + route.uri.gsub(/{[\w|\.]+}/,'[\w|\.|-|~|:|\?|#|\[|\]|@|!|\$|&|\'|\(|\)|\*|\+|,|;|=]+') + '$') 
           !regex.match(request.path).nil?
         }
         if matched_routes.count > 0
@@ -57,7 +57,7 @@ class ApiController < ApplicationController
             end
           end
           
-          render status: log[:status_code], text: log[:response_text], content_type: log[:response].content_type 
+          render status: log[:status_code], text: log[:response_text], content_type: log[:response].try(content_type)
         else
           log = {:route_id => route.id, :status_code => '400', :response => nil}
           render status: 400, text: "Bad Request."

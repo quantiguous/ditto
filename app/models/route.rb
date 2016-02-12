@@ -94,9 +94,9 @@ class Route < ActiveRecord::Base
       end
       
       # if no match is found, then we use the first matcher
-      if matched == false
-        return self.matchers.first.find_response(content_type, accept)
-      end
+#      if matched == false
+#        return self.matchers.first.find_response(content_type, accept)
+#      end
     end
   end
 
