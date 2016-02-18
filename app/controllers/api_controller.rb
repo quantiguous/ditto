@@ -37,7 +37,6 @@ class ApiController < ApplicationController
       log = {:route_id => nil, :status_code => '404', :response => nil}
       render status: 404, text: "#{request.path} not found."
     else
-      req_log = RequestLog.new(:request => input_data)
       if request.method != route.http_method
         log = {:route_id => route.id, :status_code => '405', :response => nil}
         render status: 405, text: "#{request.method} not allowed for #{params[:uri]} route."
@@ -47,7 +46,8 @@ class ApiController < ApplicationController
           headers = {'Accept' => request.env['HTTP_ACCEPT'], 
                      'X-QG-CI-SVC' => request.env['HTTP_X_QG_CI_SVC'], 
                      'X-QG-CI-URI' => request.env['HTTP_X_QG_CI_URI'], 
-                     'X-QG-CI-SCENARIO' => request.env['HTTP_X_QG_CI_SCENARIO']}
+                     'X-QG-CI-SCENARIO' => request.env['HTTP_X_QG_CI_SCENARIO'],
+                     'X-QG-CI-METHOD' => request.env['HTTP_X_QG_CI_METHOD']}
           log = route.build_reply(req_obj, request.content_type, headers)
           
           # if a delay is expected in the response, we sleep, a maximum of 60 secs is allowed
@@ -63,8 +63,11 @@ class ApiController < ApplicationController
           render status: 400, text: "Bad Request."
         end
       end
+      
+      req_log = RequestLog.new(:request => input_data)
       req_log.route_id = log[:route_id]
       req_log.response = log[:response_text]
+      
       req_header = RequestHeader.new(input_data, request.content_type, request.method, request.env['HTTP_ACCEPT'], request.content_length)
       res_header = ResponseHeader.new(log[:response].present? ? log[:response].content_type : nil, log[:status_code], log[:response].present? ? log[:response].response : nil)
       req_log.headers << req_header
