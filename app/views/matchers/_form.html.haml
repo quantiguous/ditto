@@ -20,12 +20,12 @@
   %br
     .control-group{:style=>"clear: both;"}
       %table#Matches
-        %tr
-          %th Kind
-          %th XPath
-          %th Criteria
-          %th Exp Value
         = f.fields_for :matches, :wrapper => false do |rule_form|
+          %tr
+            %th Kind
+            %th XPath
+            %th Criteria
+            %th Exp Value
           %tr.fields
             %td= rule_form.select :kind, options_for_select(Match.options_for_kind, rule_form.object.kind)
 
