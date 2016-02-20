@@ -20,15 +20,19 @@
   %br
     .control-group{:style=>"clear: both;"}
       %table#Matches
+        %tr
+          %th Kind
+          %th XPath
+          %th Criteria
+          %th Exp Value
         = f.fields_for :matches, :wrapper => false do |rule_form|
           %tr.fields
-            %td= rule_form.label :expression, 'Xpath', :class => 'control-label'
+            %td= rule_form.select :kind, options_for_select(Match.options_for_kind, rule_form.object.kind)
+
             %td= rule_form.text_field :expression
 
-            %td= rule_form.label :eval_criteria, 'Evaluation Criteria', :class => 'control-label'
             %td= rule_form.select :eval_criteria, options_for_select(Match.options_for_eval_criteria, rule_form.object.eval_criteria)
 
-            %td= rule_form.label :value, 'Exp Value', :class => 'control-label'
             %td= rule_form.text_field :value
 
             %td= rule_form.link_to_remove "Remove this rule", :class => 'control-label'
@@ -38,14 +42,15 @@
     .control-group{:style=>"clear: both;"}
       %table#responses
         = f.fields_for :responses, :wrapper => false do |response_form|
+          %tr
+            %th Content Type
+            %th Response
+            %th Status Code
           %tr.fields
-            %td= response_form.label :content_type, 'Content Type', :class => 'control-label'
             %td= response_form.select :content_type, options_for_select(Response.options_for_content_type, response_form.object.content_type)
 
-            %td= response_form.label :response, 'Response', :class => 'control-label'
-            %td= response_form.text_area :response, :style=>"width: 210px; height: 100px;"
+            %td= response_form.text_area :response, :style=>"width: 270px; height: 60px;"
 						
-            %td= response_form.label :status_code, 'Status Code', :class => 'control-label'
             %td= response_form.text_field :status_code
 
             %td= response_form.link_to_remove "Remove this response", :class => 'control-label'
