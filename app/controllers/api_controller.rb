@@ -47,7 +47,8 @@ class ApiController < ApplicationController
                      'X-QG-CI-SVC' => request.env['HTTP_X_QG_CI_SVC'], 
                      'X-QG-CI-URI' => request.env['HTTP_X_QG_CI_URI'], 
                      'X-QG-CI-SCENARIO' => request.env['HTTP_X_QG_CI_SCENARIO'],
-                     'X-QG-CI-METHOD' => request.env['HTTP_X_QG_CI_METHOD']}
+                     'X-QG-CI-METHOD' => request.env['HTTP_X_QG_CI_METHOD'],
+                     'X-QG-CI-STEP-NO' => request.env['HTTP_X_QG_CI_STEP_NO']}
           log = route.build_reply(req_obj, request.content_type, headers)
           
           # if a delay is expected in the response, we sleep, a maximum of 60 secs is allowed
