@@ -47,14 +47,14 @@ class Route < ActiveRecord::Base
     return Oga.parse_xml('<todo/>')
   end
   
-  def build_reply(req_doc, content_type, headers)
+  def build_reply(req_doc, content_type, headers, query_params)
     # we run the xml validator , if its defined 
     if xml_validator && !xml_validator.evaluate(req_doc.to_xml)
       # the schema validation failed, we return the return
       return xml_validator.build_reply(self.id)
     end
 
-    response = find_matching_reply(req_doc, content_type, headers)
+    response = find_matching_reply(req_doc, content_type, headers, query_params)
     if response.nil? 
       return {:route_id => self.id, :status_code => '501', :response => nil, :response_text => "No Response found." }
     # elsif response.is_a?(Hash) and response[:error].present?
@@ -67,7 +67,7 @@ class Route < ActiveRecord::Base
   
   private
   
-  def find_matching_reply(req_doc, content_type, headers)
+  def find_matching_reply(req_doc, content_type, headers, query_params)
     unless self.matchers.empty?
       matched = false
       accept = headers['Accept']
@@ -76,7 +76,7 @@ class Route < ActiveRecord::Base
       matched_matchers = []
       
       self.matchers.each_with_index do |matcher, index|
-        if matcher.evaluate(content_type, req_doc, headers) 
+        if matcher.evaluate(content_type, req_doc, headers, query_params) 
           matched_matchers << matcher
           matched = true
         end

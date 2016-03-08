@@ -15,10 +15,10 @@ class Matcher < ActiveRecord::Base
     end
   end
   
-  def evaluate(content_type, req, headers)
+  def evaluate(content_type, req, headers, query_params)
     matched = nil
     self.matches.each_with_index do |match, index|
-      return false if match.evaluate(content_type, req, headers) == false 
+      return false if match.evaluate(content_type, req, headers, query_params) == false 
       matched = true 
     end
     
