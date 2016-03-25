@@ -89,6 +89,7 @@ end
 
 group :test do
   gem 'webmock'
+  gem "codeclimate-test-reporter", group: :test, require: nil
 end
 
 gem 'newrelic_rpm'
