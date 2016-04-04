@@ -26,6 +26,15 @@
     .control-group
       = f.label :schema_validator, "Schema Validator", :class => 'control-label'
       = f.select :xml_validator_id, options_for_select(XmlValidator.all.map {|u| [u.name, u.id]}, :selected => f.object.xml_validator_id), :include_blank => true
+    .control-group
+      = f.label :enforce_http_basic_auth, "Enforce HTTP Basic Auth?", :class => 'control-label'
+      = f.check_box :enforce_http_basic_auth, {},"Y","N"
+    .control-group
+      = f.label :username, "Username", :class => 'control-label'
+      = f.text_field :username
+    .control-group
+      = f.label :password, "Password", :class => 'control-label'
+      = f.text_field :password
 
   %br
   %h3 Select Macther(s) :
@@ -74,10 +83,34 @@
     }
   });
 
-  if (kind == 'JSON') {
+  if ($("#route_kind") == 'JSON') {
     $("#route_operation_name").val('');
     $("#route_operation_name").prop("disabled",true);
   }
   else {
     $("#route_operation_name").prop("disabled",false);
+  }
+  
+  $("#route_enforce_http_basic_auth").on("click",function(){
+    if ($(this).attr('checked')) {
+      $("#route_username").prop("disabled",false);
+      $("#route_password").prop("disabled",false);
+    }
+    else {
+      $("#route_username").val('');
+      $("#route_username").prop("disabled",true);
+      $("#route_password").val('');
+      $("#route_password").prop("disabled",true);
+    }
+  });
+  
+  if ($("#route_enforce_http_basic_auth").attr('checked')) {
+    $("#route_username").prop("disabled",false);
+    $("#route_password").prop("disabled",false);
+  }
+  else {
+      $("#route_username").val('');
+      $("#route_username").prop("disabled",true);
+      $("#route_password").val('');
+      $("#route_password").prop("disabled",true);
   }

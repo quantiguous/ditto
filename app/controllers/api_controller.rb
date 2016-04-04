@@ -41,6 +41,14 @@ class ApiController < ApplicationController
         log = {:route_id => route.id, :status_code => '405', :response => nil}
         render status: 405, text: "#{request.method} not allowed for #{params[:uri]} route."
       else
+        if route.enforce_http_basic_auth == 'Y'
+          # apply security (basic auth)
+          authenticate_with_http_basic do |user, password|
+            if user != route.username or password != route.password
+              return request_http_basic_authentication('ditto')
+            end
+          end
+        end
         req_obj = route.parse_request(input_data, request.content_type)
         if req_obj.instance_of?(Oga::XML::Document) or route.kind == 'PLAIN-TEXT'
           headers = {'Accept' => request.env['HTTP_ACCEPT'], 
@@ -50,15 +58,16 @@ class ApiController < ApplicationController
                      'X-QG-CI-METHOD' => request.env['HTTP_X_QG_CI_METHOD'],
                      'X-QG-CI-STEP-NO' => request.env['HTTP_X_QG_CI_STEP_NO']}
           log = route.build_reply(req_obj, request.content_type, headers, request.query_parameters)
-          
+        
           # if a delay is expected in the response, we sleep, a maximum of 60 secs is allowed
           if (1..60).include?(request.env['HTTP_X_QG_CI_DELAY'].to_i)
             if request.env['HTTP_X_QG_CI_STEP_NO'] == request.env['HTTP_X_QG_CI_DELAY_STEP']
               sleep request.env['HTTP_X_QG_CI_DELAY'].to_i
             end
           end
-          
+        
           render status: log[:status_code], text: log[:response_text], content_type: log[:response].try(:content_type)
+          
         else
           log = {:route_id => route.id, :status_code => '400', :response => nil}
           render status: 400, text: "Bad Request."
