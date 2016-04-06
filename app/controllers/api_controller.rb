@@ -43,15 +43,14 @@ class ApiController < ApplicationController
       else
         if route.enforce_http_basic_auth == 'Y'
           # apply security (basic auth)
-          authenticate_with_http_basic do |user, password|
-            if user != route.username or password != route.password
-              log = {:route_id => route.id, :status_code => '401', :response => nil}
-              log_request(request, input_data, log)
-              # render status: 401, text: "Unauthorized."
-              return request_http_basic_authentication('ditto')
-            end
+          authenticated = false
+          return request_http_basic_authentication('ditto') unless request.env['HTTP_AUTHORIZATION'].present?
+          authenticated = authenticate_with_http_basic do |user, password|
+            authenticated = (user == route.username and password == route.password)
           end
+          return request_http_basic_authentication('ditto') unless authenticated
         end
+        
         req_obj = route.parse_request(input_data, request.content_type)
         if req_obj.instance_of?(Oga::XML::Document) or route.kind == 'PLAIN-TEXT'
           headers = {'Accept' => request.env['HTTP_ACCEPT'], 
