@@ -1,0 +1,25 @@
+%br
+%h3 System
+= link_to "Edit", edit_system_path
+%br
+%br
+= "Name: #{@system.name}"
+%br
+%br
+= "Total Count: #{@system.routes.count}"
+%br
+%br
+%table.table.table-bordered.table-striped.table-hover
+  .thead
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      URI
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      	   
+			
+  .tbody
+    - @system.routes.each do |route|
+      %tr
+        %td{:style=>'text-align:left;'}
+          = route.uri
+        %td{:style=>'text-align:left;'}
+          = link_to 'View' , route

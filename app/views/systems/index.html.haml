@@ -1,0 +1,30 @@
+%br
+%h3 Systems
+%br 
+= link_to 'New System', new_system_path
+%br
+%br
+= "Total Count: #{@systems_count}"
+%br
+= will_paginate @systems
+%br
+%table.table.table-bordered.table-striped.table-hover
+  .thead
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Name
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      	   
+			
+  .tbody
+    - @systems.each do |system|
+      %tr
+        %td{:style=>'text-align:left;'}
+          = system.name
+        %td{:style=>'text-align:left;'}
+          = link_to 'Show', system_path(system)
+        %td{:style=>'text-align:left;'}
+          = link_to 'Edit', edit_system_path(system)
+        %td{:style=>'text-align:left;'}
+          = link_to 'Delete', system, :method => :delete, :data => { :confirm => 'Are you sure?' }			
