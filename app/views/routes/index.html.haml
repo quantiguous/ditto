@@ -13,6 +13,8 @@
     %th{:style=>'text-align:left; background-color: lightblue;'}
       URI
     %th{:style=>'text-align:left; background-color: lightblue;'}
+      System
+    %th{:style=>'text-align:left; background-color: lightblue;'}
       HTTP Method
     %th{:style=>'text-align:left; background-color: lightblue;'}
       Kind
@@ -29,6 +31,8 @@
       %tr
         %td{:style=>'text-align:left;'}
           = route.uri
+        %td{:style=>'text-align:left;'}
+          = route.system.name
         %td{:style=>'text-align:left;'}
           = route.http_method
         %td{:style=>'text-align:left;'}

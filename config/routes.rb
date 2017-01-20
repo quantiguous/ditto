@@ -9,6 +9,7 @@ Ditto::Application.routes.draw do
   resources :matchers
   resources :request_logs
   resources :xml_validators
+  resources :systems
 
   match '/route/execute_route/:uri', to: 'routes#execute_route', via: :all
   

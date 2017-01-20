@@ -15,6 +15,9 @@
         = f.label :kind, "Kind", :class => 'control-label'
         = f.select :kind, options_for_select(Route.options_for_kind, @route.kind)
     .control-group
+      = f.label :system_id, "System", :class => 'control-label'
+      = f.select :system_id, System.all.collect { |p| [ p.name, p.id ] }
+    .control-group
       = f.label :http_method, "HTTP Method", :class => 'control-label'
       = f.select :http_method, options_for_select(Route.options_for_http_method, @route.http_method)
     .control-group

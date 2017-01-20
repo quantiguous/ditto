@@ -3,6 +3,7 @@ class Route < ActiveRecord::Base
   has_many :request_logs
   
   belongs_to :xml_validator
+  belongs_to :system
   
   validates_presence_of :uri, :kind, :http_method
   

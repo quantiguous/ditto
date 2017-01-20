@@ -83,7 +83,7 @@ class RoutesController < ApplicationController
 
   private
     def route_params
-      params.require(:route).permit(:kind, :http_method, :uri, :xml_validator_id, :operation_name, :enforce_http_basic_auth, :username, :password)
+      params.require(:route).permit(:kind, :http_method, :uri, :xml_validator_id, :operation_name, :enforce_http_basic_auth, :username, :password, :system_id)
     end
 
 end
