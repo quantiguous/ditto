@@ -3,7 +3,7 @@ class MatchersController < ApplicationController
   before_filter :block_inactive_user!
   
   def index
-    matchers = Matcher.order("id desc")
+    matchers = Matcher.order(:name)
     
     if params[:route_id].present?
       matchers = Matcher.where(:route_id => params[:route_id])

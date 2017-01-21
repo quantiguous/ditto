@@ -2,4 +2,23 @@
 %h3 Schema Validators
 %br
 = link_to 'New Schema Validator', new_xml_validator_path
-
+%br
+%br
+= "Total Count: #{@xml_validators_count}"
+%br
+= will_paginate @xml_validators
+%br
+%table.table.table-bordered.table-striped.table-hover
+  .thead
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Name
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      	   
+			
+  .tbody
+    - @xml_validators.each do |xml_validator|
+      %tr
+        %td{:style=>'text-align:left;'}
+          = xml_validator.name
+        %td{:style=>'text-align:left;'}
+          = link_to 'Edit', edit_xml_validator_path(xml_validator)
