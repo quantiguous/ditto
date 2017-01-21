@@ -3,7 +3,7 @@ class XmlValidatorsController < ApplicationController
   before_filter :block_inactive_user!
   
   def index
-    xml_validators = XmlValidator.order("id desc")
+    xml_validators = XmlValidator.order(:name)
     
     if params[:route_id].present?
       xml_validators = XmlValidator.where(:route_id => params[:route_id])
@@ -30,7 +30,7 @@ class XmlValidatorsController < ApplicationController
     else
       @xml_validator.save!
       flash[:alert] = 'XmlValidator was successfully created.'
-      redirect_to @xml_validator
+      redirect_to xml_validators_path
     end
   end
   
@@ -47,7 +47,7 @@ class XmlValidatorsController < ApplicationController
     else
       @xml_validator.save!
       flash[:alert] = 'XmlValidator was successfully updated.'
-      redirect_to @xml_validator
+      redirect_to xml_validators_path
     end
     rescue ActiveRecord::StaleObjectError
       @bank.reload

@@ -3,7 +3,7 @@ class SystemsController < ApplicationController
   before_filter :block_inactive_user!
 
   def index
-    systems = System.order("id desc")
+    systems = System.order(:name)
     @systems_count = systems.count
     @systems = systems.paginate(:per_page => 25, :page => params[:page]) rescue []
   end

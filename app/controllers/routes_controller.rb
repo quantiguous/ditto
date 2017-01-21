@@ -3,7 +3,7 @@ class RoutesController < ApplicationController
   before_filter :block_inactive_user!
 
   def index
-    routes = Route.order("uri, operation_name desc")
+    routes = Route.order("uri, operation_name")
     @routes_count = routes.count
     @routes = routes.paginate(:per_page => 25, :page => params[:page]) rescue []
   end
