@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160404073957) do
+ActiveRecord::Schema.define(version: 20170716182514) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -141,8 +141,26 @@ ActiveRecord::Schema.define(version: 20160404073957) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
   add_index "roles", ["name"], name: "index_roles_on_name"
 
-# Could not dump table "routes" because of following NoMethodError
-#   undefined method `[]' for nil:NilClass
+  create_table "routes", force: :cascade do |t|
+    t.string   "uri",                                                 null: false
+    t.string   "kind"
+    t.string   "http_method"
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.string   "operation_name"
+    t.integer  "xml_validator_id"
+    t.string   "enforce_http_basic_auth", limit: 1
+    t.string   "username",                limit: 50
+    t.string   "password",                limit: 100
+    t.integer  "system_id",                                           null: false
+    t.boolean  "hidden",                              default: false
+  end
+
+  create_table "systems", force: :cascade do |t|
+    t.string   "name",       limit: 100, null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                             default: "",    null: false

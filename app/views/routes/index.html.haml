@@ -45,8 +45,14 @@
         %td{:style=>'text-align:left;'}
           = link_to 'Show', route_path(route)
         %td{:style=>'text-align:left;'}
-          = link_to 'Edit', edit_route_path(route)
+          - if route.is_editable?
+            = link_to 'Edit', edit_route_path(route)
+          - else
+            = "-"
         %td{:style=>'text-align:left;'}
-          = link_to 'Delete', route, :method => :delete, :data => { :confirm => 'Are you sure?' }
+          - if route.is_editable?
+            = link_to 'Delete', route, :method => :delete, :data => { :confirm => 'Are you sure?' }
+          - else
+            = "-"
         %td{:style=>'text-align:left;'}
           = link_to "Show Requests Logs", request_logs_path(route_id: route.id)					

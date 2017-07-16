@@ -15,6 +15,9 @@ class Route < ActiveRecord::Base
     [['GET','GET'],['POST','POST'],['PUT','PUT'],['PATCH','PATCH'],['DELETE','DELETE']]
   end
 
+  def is_editable?
+    hidden == false ? true : false
+  end
   
 
   def parse_request(req, content_type)

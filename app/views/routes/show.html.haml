@@ -1,17 +1,31 @@
 %br
 %h3 Route
-= link_to "Edit", edit_route_path
+- if @route.is_editable?
+  = link_to "Edit", edit_route_path
 %br
 %br
-= "URI: #{@route.uri}"
-%br
-#br
-Schema Validator: 
-- if @route.xml_validator.present?
-  = link_to "#{@route.xml_validator.name}", @route.xml_validator
-- else
-  = '-'
-%br
+%table.table.table-bordered.table-condensed{style: 'width: 35%'}
+  %tr
+    %th
+      URI :
+    %td
+      = @route.uri
+    %th
+      Hidden? :
+    %td
+      = @route.hidden
+  %tr
+    %th
+      Schema Validator :
+    %td
+      - if @route.xml_validator.present?
+        = link_to "#{@route.xml_validator.name}", @route.xml_validator
+      - else
+        = '-'
+    %th
+      Editable? :
+    %td
+      = @route.is_editable?
 %br
 = link_to 'New Matcher', new_matcher_path
 %br
