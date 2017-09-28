@@ -1,0 +1,24 @@
+%br
+%h3 Service
+%br
+%br
+= "Name: #{@service.name}"
+%br
+%br
+= "Total Count: #{@service.test_cases.count}"
+%br
+%br
+%table.table.table-bordered.table-striped.table-hover
+  .thead
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Scenario
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      	   
+			
+  .tbody
+    - @service.test_cases.each do |test_case|
+      %tr
+        %td{:style=>'text-align:left;'}
+          = test_case.scenario
+        %td{:style=>'text-align:left;'}
+          = link_to 'Download Request' , download_test_case_path(test_case), method: :put
