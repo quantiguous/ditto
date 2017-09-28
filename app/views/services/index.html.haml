@@ -1,0 +1,24 @@
+%br
+%h3 Services
+%br
+%br
+= "Total Count: #{@services_count}"
+%br
+= will_paginate @services
+%br
+%table.table.table-bordered.table-striped.table-hover
+  .thead
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Name
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      	   
+			
+  .tbody
+    - @services.each do |service|
+      %tr
+        %td{:style=>'text-align:left;'}
+          = service.name
+        %td{:style=>'text-align:left;'}
+          = link_to 'Show', service_path(service)

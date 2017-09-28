@@ -40,6 +40,7 @@ gem 'oj'
 gem 'ox'
 gem 'gyoku', '~> 1.0'
 gem 'liquid'
+gem 'seed-fu', '~> 2.3'
 
 # Used only if oracle db is being used
 group :production do

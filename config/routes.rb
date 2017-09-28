@@ -10,6 +10,13 @@ Ditto::Application.routes.draw do
   resources :request_logs
   resources :xml_validators
   resources :systems
+  resources :services
+  
+  resources :test_cases do
+    member do
+      put :download
+    end
+  end
 
   match '/route/execute_route/:uri', to: 'routes#execute_route', via: :all
   
