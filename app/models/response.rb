@@ -1,9 +1,12 @@
 class Response < ActiveRecord::Base
   belongs_to :matcher
+  belongs_to :xsl
   
   before_save :set_status_code
   
   validate :validate_response_body_for_content_type
+  
+  validates_absence_of :xsl_id, if: "response.present?", message: 'must be blank when response is present'
   
   def self.options_for_content_type
     [['text/plain','text/plain'], ['text/xml','text/xml'], ['application/json','application/json'], 

@@ -20,7 +20,7 @@ class Route < ActiveRecord::Base
   end
   
 
-  def parse_request(req, content_type)
+  def parse_request(params, req, content_type)
 
     # parsing of query_params is not yet supported
     if req.empty? 
@@ -46,6 +46,13 @@ class Route < ActiveRecord::Base
         rescue Exception => e
           return {error: e.message}
         end
+      elsif (parsed_content_type.include?("x-www-form-urlencoded") == true)
+        begin
+          document = Oga.parse_xml(params.to_xml(root: 'params'))
+          return document
+        rescue Exception => e
+          return {error: e.message}
+        end
       end
     end
     return Oga.parse_xml('<todo/>')
@@ -64,7 +71,18 @@ class Route < ActiveRecord::Base
     # elsif response.is_a?(Hash) and response[:error].present?
     #   return {:route_id => self.id, :status_code => '500', :response => nil, :response_text => "Schema validation error : #{response[:error]}" }
     else
-      return {:route_id => self.id, :status_code => response.status_code, :response => response, :response_text => Liquid::Template.parse(response.response).render}
+      begin
+        if response.xsl.present?
+          xml = Nokogiri::XML(response.response)
+          xsl = Nokogiri::XSLT(response.xsl.xsl)
+          formatted_response_xml = xsl.transform(xml).to_xml
+        else
+          formatted_response_xml = response.response
+        end
+        return {:route_id => self.id, :status_code => response.status_code, :response => response, :response_text => Liquid::Template.parse(formatted_response_xml).render}
+      rescue Exception => e
+        return {error: e.message}
+      end
     end  
   end 
   

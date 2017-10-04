@@ -10,4 +10,8 @@ class ContentType
   def self.is_plain(content_type)
     return content_type.include?('plain')
   end
+  
+  def self.is_form_urlencoded(content_type)
+    return content_type.include?('x-www-form-urlencoded')
+  end
 end

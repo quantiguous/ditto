@@ -16,7 +16,7 @@ class Match < ActiveRecord::Base
       if ContentType.is_plain(content_type)
         requestString = reqTextOrxmlDocObj
       end
-      if ContentType.is_xml(content_type) || ContentType.is_json(content_type) 
+      if ContentType.is_xml(content_type) || ContentType.is_json(content_type) || ContentType.is_form_urlencoded(content_type)
         requestString = reqTextOrxmlDocObj.xpath(self.expression).try(:text)
       end
     when "header"

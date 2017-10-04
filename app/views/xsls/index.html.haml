@@ -1,0 +1,24 @@
+%br
+%h3 XSLs
+%br
+= link_to 'New XSL', new_xsl_path
+%br
+%br
+= "Total Count: #{@xsls_count}"
+%br
+= will_paginate @xsls
+%br
+%table.table.table-bordered.table-striped.table-hover
+  .thead
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Name
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      	   
+			
+  .tbody
+    - @xsls.each do |xsl|
+      %tr
+        %td{:style=>'text-align:left;'}
+          = xsl.name
+        %td{:style=>'text-align:left;'}
+          = link_to 'Edit', edit_xsl_path(xsl)

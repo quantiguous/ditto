@@ -11,6 +11,7 @@ Ditto::Application.routes.draw do
   resources :xml_validators
   resources :systems
   resources :services
+  resources :xsls
   
   resources :test_cases do
     member do
