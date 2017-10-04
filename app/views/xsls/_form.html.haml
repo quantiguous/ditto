@@ -1,0 +1,18 @@
+= form_for @xsl, :html => {:class=>'form-horizontal', :multipart => true, :autocomplete=>"off", :id => "validator_form", :style=> 'overflow: auto;'} do |f|
+  - if @xsl.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@xsl.errors.count, "error")
+        prohibited this validator from being saved:
+      %ul
+        - @xsl.errors.full_messages.each do |message|
+          %li= message
+  .control-group
+    .control-group
+      = f.label :name, :class => 'control-label'
+      = f.text_field :name
+    .control-group
+      = f.label :xsl, 'XSL', :class => 'control-label'
+      = f.text_area :xsl, size: "30x10", :style=>"width: 410px; max-width: 500px; resize: both; height: 100px; max-height: 180px;"
+  .actions
+    = f.submit "Submit", :class => "btn"

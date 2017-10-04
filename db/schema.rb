@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170716182514) do
+ActiveRecord::Schema.define(version: 20171003124836) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 20170716182514) do
     t.datetime "updated_at", null: false
     t.string   "name"
     t.string   "scenario"
+    t.integer  "xsl_id"
   end
 
   create_table "matches", force: :cascade do |t|
@@ -119,6 +120,8 @@ ActiveRecord::Schema.define(version: 20170716182514) do
     t.text     "headers"
   end
 
+  add_index "request_logs", ["route_id"], name: "request_logs_01"
+
   create_table "responses", force: :cascade do |t|
     t.text     "response"
     t.string   "content_type"
@@ -128,6 +131,7 @@ ActiveRecord::Schema.define(version: 20170716182514) do
     t.integer  "match_id"
     t.integer  "xml_validator_id"
     t.string   "status_code"
+    t.integer  "xsl_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -156,8 +160,22 @@ ActiveRecord::Schema.define(version: 20170716182514) do
     t.boolean  "hidden",                              default: false
   end
 
+  create_table "services", force: :cascade do |t|
+    t.string   "name",       limit: 100, null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
   create_table "systems", force: :cascade do |t|
     t.string   "name",       limit: 100, null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "test_cases", force: :cascade do |t|
+    t.string   "scenario",   limit: 255, null: false
+    t.integer  "service_id",             null: false
+    t.text     "request",                null: false
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
@@ -199,5 +217,10 @@ ActiveRecord::Schema.define(version: 20170716182514) do
   end
 
   add_index "xml_validators", ["name"], name: "index_xml_validators_on_name", unique: true
+
+  create_table "xsls", force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.text   "xsl",              null: false
+  end
 
 end
