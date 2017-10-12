@@ -73,19 +73,24 @@ class Route < ActiveRecord::Base
     else
       begin
         if response.xsl.present?
-          xml = Nokogiri::XML(response.response)
+          xml = Nokogiri::XML(req_doc.to_xml)
           xsl = Nokogiri::XSLT(response.xsl.xsl)
-          formatted_response_xml = xsl.transform(xml).to_xml
+          formatted_response_xml = xsl.transform(xml, ["UUID", "'#{SecureRandom.uuid.gsub('-','').upcase}'", "currentDate", "'#{Date.today}'", "uniqueRequestNo", "'#{SecureRandom.uuid.gsub('-','').upcase}'", "bankReferenceNo", "'#{bank_ref_no}'"]).to_xml
+        elsif response.fault_code.present?
+          formatted_response_xml = Liquid::Template.parse(File.read('public/soap_fault.xml')).render('fault_code' => response.fault_code, 'fault_reason' => response.fault_reason)
         else
           formatted_response_xml = response.response
         end
         return {:route_id => self.id, :status_code => response.status_code, :response => response, :response_text => Liquid::Template.parse(formatted_response_xml).render}
       rescue Exception => e
-        return {error: e.message}
+        return {response: e.message}
       end
-    end  
-  end 
+    end
+  end
   
+  def bank_ref_no
+    "YESB"+rand(10 ** 10).to_s
+  end
   
   private
   

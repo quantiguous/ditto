@@ -46,6 +46,8 @@
             %th Content Type
             %th Response
             %th XSL
+            %th Fault Code
+            %th Fault Reason
             %th Status Code
           %tr.fields
             %td= response_form.select :content_type, options_for_select(Response.options_for_content_type, response_form.object.content_type)
@@ -53,6 +55,10 @@
             %td= response_form.text_area :response, :style=>"width: 270px; height: 60px;"
             
             %td= response_form.select :xsl_id, Xsl.all.map { |key, value| [key.name, key.id] }, include_blank: 'Select'
+            
+            %td= response_form.text_field :fault_code
+            
+            %td= response_form.text_field :fault_reason
 						
             %td= response_form.text_field :status_code
 
