@@ -44,6 +44,7 @@
         = f.fields_for :responses, :wrapper => false do |response_form|
           %tr
             %th Content Type
+            %th Kind
             %th Response
             %th XSL
             %th Fault Code
@@ -51,19 +52,44 @@
             %th Status Code
           %tr.fields
             %td= response_form.select :content_type, options_for_select(Response.options_for_content_type, response_form.object.content_type)
+            
+            %td= response_form.select :kind, options_for_select(Response::KIND, response_form.object.kind), {}, {class: 'content_type_select', onchange: 'toggle_response_blocks(this)', style: "width:150px"}
 
-            %td= response_form.text_area :response, :style=>"width: 270px; height: 60px;"
+            %td= response_form.text_area :response, :style=>"width: 270px; height: 60px;", class: 'response_xml_text', disabled: true
             
-            %td= response_form.select :xsl_id, Xsl.all.map { |key, value| [key.name, key.id] }, include_blank: 'Select'
+            %td= response_form.select :xsl_id, Xsl.all.map { |key, value| [key.name, key.id] }, { include_blank: 'Select'}, {class: 'xsl_select', disabled: true, style: "width:150px"}
+
+            %td= response_form.text_field :fault_code, class: 'fault_text', disabled: true
             
-            %td= response_form.text_field :fault_code
-            
-            %td= response_form.text_field :fault_reason
+            %td= response_form.text_field :fault_reason, class: 'fault_text', disabled: true
 						
-            %td= response_form.text_field :status_code
+            %td= response_form.text_field :status_code, style: "width:70px"
 
             %td= response_form.link_to_remove "Remove this response", :class => 'control-label'
 
         = f.link_to_add "Add a response", :responses, :data => { :target => "#responses" }
   .actions
     = f.submit "Create Matcher", :class => "btn"
+
+:javascript
+      
+  function toggle_response_blocks(ele) {
+    var select_val = $(ele).val();
+    var parent_block = $(ele).parent().parent();
+    
+    if (select_val == 'RESPONSE_BODY') {
+      $(parent_block).find('.xsl_select').prop('disabled', true);
+      $(parent_block).find('.fault_text').prop('disabled', true);
+      $(parent_block).find('.response_xml_text').prop('disabled', false);
+    }
+    else if (select_val == 'XSL') {
+      $(parent_block).find('.response_xml_text').prop('disabled', true);
+      $(parent_block).find('.xsl_select').prop('disabled', false);
+      $(parent_block).find('.fault_text').prop('disabled', true);
+    }
+    else if (select_val == 'SOAP_FAULT') {
+      $(parent_block).find('.xsl_select').prop('disabled', true);
+      $(parent_block).find('.fault_text').prop('disabled', false);
+      $(parent_block).find('.response_xml_text').prop('disabled', true);
+    }
+  }

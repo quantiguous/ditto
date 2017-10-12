@@ -1,4 +1,5 @@
 class Response < ActiveRecord::Base
+  KIND = ['RESPONSE_BODY', 'XSL', 'SOAP_FAULT']
   belongs_to :matcher
   belongs_to :xsl
   

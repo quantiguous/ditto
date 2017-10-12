@@ -2,7 +2,7 @@ class Match < ActiveRecord::Base
   belongs_to :matcher
   
   def self.options_for_eval_criteria
-    [['Exists','exists'], ['Equal To','equal_to'], ['Starts With','starts_with'], ['Contains','contains'], ['Ends With','ends_with']]
+    [['Exists','exists'], ['Equal To','equal_to'], ['Starts With','starts_with'], ['Contains','contains'], ['Ends With','ends_with'], ['Xpath','xpath']]
   end
   
   def self.options_for_kind
@@ -55,6 +55,10 @@ class Match < ActiveRecord::Base
           return true
         end 
       end 
+    when "xpath"
+      return false if expressionResult.nil?
+      xmlDoc = Oga.parse_xml(expressionResult, :strict => true)
+      return true if xmlDoc.xpath(self.value)
     end
     
     return false
