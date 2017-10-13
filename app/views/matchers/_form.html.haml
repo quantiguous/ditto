@@ -77,17 +77,17 @@
     var select_val = $(ele).val();
     var parent_block = $(ele).parent().parent();
     
-    if (select_val == 'RESPONSE_BODY') {
+    if (select_val == 'response_body') {
       $(parent_block).find('.xsl_select').prop('disabled', true);
       $(parent_block).find('.fault_text').prop('disabled', true);
       $(parent_block).find('.response_xml_text').prop('disabled', false);
     }
-    else if (select_val == 'XSL') {
+    else if (select_val == 'xsl') {
       $(parent_block).find('.response_xml_text').prop('disabled', true);
       $(parent_block).find('.xsl_select').prop('disabled', false);
       $(parent_block).find('.fault_text').prop('disabled', true);
     }
-    else if (select_val == 'SOAP_FAULT') {
+    else if (select_val == 'soap_fault') {
       $(parent_block).find('.xsl_select').prop('disabled', true);
       $(parent_block).find('.fault_text').prop('disabled', false);
       $(parent_block).find('.response_xml_text').prop('disabled', true);

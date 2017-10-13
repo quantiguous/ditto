@@ -1,5 +1,5 @@
 class Response < ActiveRecord::Base
-  KIND = ['RESPONSE_BODY', 'XSL', 'SOAP_FAULT']
+  KIND = [['Response Body','response_body'], ['XSL','xsl'], ['SOAP Fault','soap_fault']]
   belongs_to :matcher
   belongs_to :xsl
   
