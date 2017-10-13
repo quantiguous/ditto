@@ -53,7 +53,7 @@
           %tr.fields
             %td= response_form.select :content_type, options_for_select(Response.options_for_content_type, response_form.object.content_type)
             
-            %td= response_form.select :kind, options_for_select(Response::KIND, response_form.object.kind), {}, {class: 'content_type_select', onchange: 'toggle_response_blocks(this)', style: "width:150px"}
+            %td= response_form.select :kind, options_for_select(Response::KIND, response_form.object.kind), {}, {class: 'kind_select', onchange: 'toggle_response_blocks(this)', style: "width:150px"}
 
             %td= response_form.text_area :response, :style=>"width: 270px; height: 60px;", class: 'response_xml_text', disabled: true
             
