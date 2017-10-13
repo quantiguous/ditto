@@ -1,0 +1,21 @@
+<soapenv12:Fault
+    xmlns:soapenv12="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    xmlns:ns="http://www.quantiguous.com/services"
+    xmlns:http="http://www.quantiguous.com/services"
+    xmlns:iib="http://www.ibm.com/iib"
+    xmlns:ycs="https://uat.yalamanchili.in/"
+    xmlns:vp="http://www.ibm.com/dfdl/ISO8583-1993"
+    xmlns:flex="http://www.oracle.com/flexcube"
+    xmlns:pt="https://www.puratech.co.in/"
+    xmlns:billdesk="http://www.quantiguous.com/dfdl/billdesk">
+    <soapenv12:Code>
+        <soapenv12:Value>soapenv12:Sender</soapenv12:Value>
+        <soapenv12:Subcode>
+            <soapenv12:Value>{{fault_code}}</soapenv12:Value>
+        </soapenv12:Subcode>
+    </soapenv12:Code>
+    <soapenv12:Reason>
+        <soapenv12:Text xml:lang="EN">{{fault_reason}}</soapenv12:Text>
+    </soapenv12:Reason>
+</soapenv12:Fault>

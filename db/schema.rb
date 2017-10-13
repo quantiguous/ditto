@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171003124836) do
+ActiveRecord::Schema.define(version: 20171012140932) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -125,13 +125,16 @@ ActiveRecord::Schema.define(version: 20171003124836) do
   create_table "responses", force: :cascade do |t|
     t.text     "response"
     t.string   "content_type"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
     t.integer  "matcher_id"
     t.integer  "match_id"
     t.integer  "xml_validator_id"
     t.string   "status_code"
     t.integer  "xsl_id"
+    t.string   "fault_code",       limit: 100
+    t.string   "fault_reason",     limit: 400
+    t.string   "kind",             limit: 100, default: "response_body", null: false
   end
 
   create_table "roles", force: :cascade do |t|

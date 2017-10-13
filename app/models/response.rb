@@ -1,4 +1,5 @@
 class Response < ActiveRecord::Base
+  KIND = [['Response Body','response_body'], ['XSL','xsl'], ['SOAP Fault','soap_fault']]
   belongs_to :matcher
   belongs_to :xsl
   
@@ -6,7 +7,10 @@ class Response < ActiveRecord::Base
   
   validate :validate_response_body_for_content_type
   
-  validates_absence_of :xsl_id, if: "response.present?", message: 'must be blank when response is present'
+  validates_absence_of :fault_reason, if: "fault_code.blank?", message: 'must be blank when Fault Code is blank'
+  validates_presence_of :fault_reason, if: "fault_code.present?", message: 'must be present when Fault Code is present'
+  
+  validate :check_response_kind
   
   def self.options_for_content_type
     [['text/plain','text/plain'], ['text/xml','text/xml'], ['application/json','application/json'], 
@@ -38,4 +42,12 @@ class Response < ActiveRecord::Base
   rescue
     errors.add(:response, "content is not valid for the content_type")
   end 
+  
+  def check_response_kind
+    if ((response.present? && (xsl_id.present? || fault_code.present? || fault_reason.present?)) ||
+      (xsl_id.present? && (response.present? || fault_code.present? || fault_reason.present?)) ||
+      (fault_code.present? && (xsl_id.present? || response.present?)))
+      errors[:base] << "Please set either a Response, XSL or Fault Code"
+    end
+  end
 end
