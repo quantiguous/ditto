@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171012140932) do
+ActiveRecord::Schema.define(version: 20171017130317) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -135,6 +135,8 @@ ActiveRecord::Schema.define(version: 20171012140932) do
     t.string   "fault_code",       limit: 100
     t.string   "fault_reason",     limit: 400
     t.string   "kind",             limit: 100, default: "response_body", null: false
+    t.string   "xsl_on_kind"
+    t.string   "xsl_on_value"
   end
 
   create_table "roles", force: :cascade do |t|

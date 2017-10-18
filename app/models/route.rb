@@ -8,7 +8,7 @@ class Route < ActiveRecord::Base
   validates_presence_of :uri, :kind, :http_method
   
   def self.options_for_kind
-    [['SOAP','SOAP'],['XML','XML'],['JSON','JSON'],['PLAIN-TEXT','PLAIN-TEXT']]
+    [['SOAP','SOAP'],['XML','XML'],['JSON','JSON'],['PLAIN-TEXT','PLAIN-TEXT'],['URL-FORM-ENCODED','URL-FORM-ENCODED']]
   end
   
   def self.options_for_http_method
@@ -20,7 +20,12 @@ class Route < ActiveRecord::Base
   end
   
 
-  def parse_request(params, req, content_type)
+#  def parse_request(params, req, content_type)
+  def parse_request(req, content_type)
+    xml_1 = ::Builder::XmlMarkup.new
+    def xml_1._escape(text)
+      "<![CDATA[#{text}]]>"
+    end
 
     # parsing of query_params is not yet supported
     if req.empty? 
@@ -48,7 +53,7 @@ class Route < ActiveRecord::Base
         end
       elsif (parsed_content_type.include?("x-www-form-urlencoded") == true)
         begin
-          document = Oga.parse_xml(params.to_xml(root: 'params'))
+          document = Oga.parse_xml(xml_1.params(params))
           return document
         rescue Exception => e
           return {error: e.message}
@@ -72,25 +77,13 @@ class Route < ActiveRecord::Base
     #   return {:route_id => self.id, :status_code => '500', :response => nil, :response_text => "Schema validation error : #{response[:error]}" }
     else
       begin
-        if response.xsl.present?
-          xml = Nokogiri::XML(req_doc.to_xml)
-          xsl = Nokogiri::XSLT(response.xsl.xsl)
-          formatted_response_xml = xsl.transform(xml, ["UUID", "'#{SecureRandom.uuid.gsub('-','').upcase}'", "currentDate", "'#{Date.today}'", "uniqueRequestNo", "'#{SecureRandom.uuid.gsub('-','').upcase}'", "bankReferenceNo", "'#{bank_ref_no}'"]).to_xml
-        elsif response.fault_code.present?
-          formatted_response_xml = Liquid::Template.parse(File.read('public/soap_fault.xml')).render('fault_code' => response.fault_code, 'fault_reason' => response.fault_reason)
-        else
-          formatted_response_xml = response.response
-        end
-        return {:route_id => self.id, :status_code => response.status_code, :response => response, :response_text => Liquid::Template.parse(formatted_response_xml).render}
+        return response.to_hash(self.id, req_doc, query_params)
       rescue Exception => e
-        return {response: e.message}
+        return {:route_id => self.id, :status_code => '505', :response => nil, :response_text => "Failed In Building Response #{e.message}" }
       end
     end
   end
   
-  def bank_ref_no
-    "YESB"+rand(10 ** 10).to_s
-  end
   
   private
   

@@ -47,6 +47,8 @@
             %th Kind
             %th Response
             %th XSL
+            %th XSL On (kind)
+            %th XSL On (name of element or param)
             %th Fault Code
             %th Fault Reason
             %th Status Code
@@ -58,6 +60,10 @@
             %td= response_form.text_area :response, :style=>"width: 270px; height: 60px;", class: 'response_xml_text', disabled: true
             
             %td= response_form.select :xsl_id, Xsl.all.map { |key, value| [key.name, key.id] }, { include_blank: 'Select'}, {class: 'xsl_select', disabled: true, style: "width:150px"}
+            
+            %td= response_form.select :xsl_on_kind, options_for_select(Response::XSL_KIND, response_form.object.xsl_on_kind), { include_blank: 'Select'}, {class: 'xsl_select', disabled: true, style: "width:150px"}
+            
+            %td= response_form.text_field :xsl_on_value, class: 'xsl_select', disabled: true
 
             %td= response_form.text_field :fault_code, class: 'fault_text', disabled: true
             
@@ -93,3 +99,7 @@
       $(parent_block).find('.response_xml_text').prop('disabled', true);
     }
   }
+  
+  $('#matcher_form').bind('submit', function() {
+      $(this).find(':input').removeAttr('disabled');
+  });
