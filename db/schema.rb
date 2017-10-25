@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171017130317) do
+ActiveRecord::Schema.define(version: 20171025063153) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -88,11 +88,12 @@ ActiveRecord::Schema.define(version: 20171017130317) do
 
   create_table "matchers", force: :cascade do |t|
     t.integer  "route_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.string   "name"
     t.string   "scenario"
     t.integer  "xsl_id"
+    t.string   "matcher_type", default: "Matcher", null: false
   end
 
   create_table "matches", force: :cascade do |t|
@@ -101,10 +102,22 @@ ActiveRecord::Schema.define(version: 20171017130317) do
     t.string   "eval_criteria"
     t.integer  "matcher_id"
     t.integer  "response_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.string   "kind"
+    t.string   "apply_on",      default: "REQUEST", null: false
   end
+
+  create_table "nonces", force: :cascade do |t|
+    t.integer  "route_id",       null: false
+    t.integer  "matcher_id",     null: false
+    t.string   "nonce_value",    null: false
+    t.datetime "created_at",     null: false
+    t.datetime "expire_at",      null: false
+    t.integer  "request_log_id"
+  end
+
+  add_index "nonces", ["route_id", "nonce_value"], name: "uk_nonces_1", unique: true
 
   create_table "request_logs", force: :cascade do |t|
     t.string   "route_id"
@@ -115,9 +128,10 @@ ActiveRecord::Schema.define(version: 20171017130317) do
     t.string   "content_type"
     t.string   "kind"
     t.text     "response"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.text     "headers"
+    t.string   "rep_content_type", limit: 100
   end
 
   add_index "request_logs", ["route_id"], name: "request_logs_01"
@@ -137,6 +151,7 @@ ActiveRecord::Schema.define(version: 20171017130317) do
     t.string   "kind",             limit: 100, default: "response_body", null: false
     t.string   "xsl_on_kind"
     t.string   "xsl_on_value"
+    t.string   "xsl_params"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -163,6 +178,10 @@ ActiveRecord::Schema.define(version: 20171017130317) do
     t.string   "password",                limit: 100
     t.integer  "system_id",                                           null: false
     t.boolean  "hidden",                              default: false
+    t.integer  "nonce_matcher_id"
+    t.integer  "chained_route_id"
+    t.integer  "chain_matcher_id"
+    t.integer  "nonce_expire_after"
   end
 
   create_table "services", force: :cascade do |t|

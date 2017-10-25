@@ -34,7 +34,22 @@
       = f.text_field :operation_name
     .control-group
       = f.label :schema_validator, "Schema Validator", :class => 'control-label'
-      = f.select :xml_validator_id, options_for_select(XmlValidator.all.map {|u| [u.name, u.id]}, :selected => f.object.xml_validator_id), :include_blank => true
+      = f.select :xml_validator_id, options_for_select(XmlValidator.all.map {|u| [u.name, u.id]}, :selected => f.object.xml_validator_id), :include_blank => 'Select'
+
+    .control-group
+      = f.label :nonce_matcher, "NONCE Matcher", :class => 'control-label'
+      = f.select :nonce_matcher_id, options_for_select(Matcher.nonce_matchers.map {|u| [u.name, u.id]}, :selected => f.object.nonce_matcher_id), :include_blank => 'Select'
+    .control-group
+      = f.label :nonce_expire_after, "NONCE Expire After", :class => 'control-label'
+      = f.number_field :nonce_expire_after
+
+    .control-group
+      = f.label :chained_route, "Chaind Route", :class => 'control-label'
+      = f.select :chained_route_id, options_for_select(Route.all.map {|u| [u.uri, u.id]}, :selected => f.object.chained_route_id), :include_blank => 'Select'
+    .control-group
+      = f.label :chain_matcher, "Chain Matcher", :class => 'control-label'
+      = f.select :chain_matcher_id, options_for_select(Matcher.all.map {|u| [u.name, u.id]}, :selected => f.object.chain_matcher_id), :include_blank => 'Select'
+
     .control-group
       = f.label :enforce_http_basic_auth, "Enforce HTTP Basic Auth?", :class => 'control-label'
       = f.check_box :enforce_http_basic_auth, {},"Y","N"

@@ -13,8 +13,8 @@ class Response < ActiveRecord::Base
   
   validate :check_response_kind
   
-  def to_hash(route_id, req_doc, params)
-    body = build_body(req_doc, params)
+  def to_hash(route_id, req_doc, params, chained_req = nil, chained_rep = nil)
+    body = build_body(req_doc, params, chained_req, chained_rep)
     return {:route_id => route_id, :status_code => status_code, :response => self, :response_text => Liquid::Template.parse(body).render}
   end
 
@@ -59,7 +59,7 @@ class Response < ActiveRecord::Base
   end
   
   private
-  def build_body(req_doc, params)
+  def build_body(req_doc, params, chained_req, chained_rep)
     # the respose_body is specified as one of the following
     # the entire body 
     # an xsl that has to be applied to the input (body or one of the params)
@@ -67,15 +67,23 @@ class Response < ActiveRecord::Base
     
     if xsl.present?
       if xsl_on_kind == 'body'
-        xsl_on = Nokogiri::XML(req_doc.to_xml)
+        doc1 = Nokogiri::XML(req_doc.to_xml)
+        doc2 = Nokogiri::XML(chained_req.to_xml) unless chained_req.nil? 
+        doc3 = Nokogiri::XML(chained_rep.to_xml) unless chained_rep.nil?
+
+        xsl_on = Nokogiri::XML("<q:ditto xmlns:q='http://www.quantiguous.com/ditto'><q:req/><q:chained><q:req/><q:rep/></q:chained></q:ditto>")
+
+        xsl_on.at('//q:ditto/q:req', 'q' => 'http://www.quantiguous.com/ditto') << doc1.root.children
+        xsl_on.at('//q:ditto/q:chained/q:req', 'q' => 'http://www.quantiguous.com/ditto') << doc2.root.children unless doc2.nil?
+        xsl_on.at('//q:ditto/q:chained/q:rep', 'q' => 'http://www.quantiguous.com/ditto') << doc3.root.children unless doc3.nil?
       else
         xsl_on = Nokogiri::XML(params[xsl_on_value])
       end
-      return xsl.apply(xsl_on)
+      return xsl.apply(xsl_on, xsl_params)
     elsif fault_code.present?
       return Liquid::Template.parse(File.read('public/soap_fault.xml')).render('fault_code' => fault_code, 'fault_reason' => fault_reason)
     else
       return response
-    end    
+    end
   end
 end

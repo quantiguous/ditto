@@ -10,6 +10,10 @@ class RoutesController < ApplicationController
 
   def show
     @route = Route.find(params[:id])
+    @matchers = @route.matchers
+    @nonce_matcher = @route.nonce_matcher
+    @chain_matcher = @route.chain_matcher
+    @chained_route = @route.chained_route
   end
 
   def new
@@ -83,7 +87,8 @@ class RoutesController < ApplicationController
 
   private
     def route_params
-      params.require(:route).permit(:kind, :http_method, :uri, :xml_validator_id, :operation_name, :enforce_http_basic_auth, :username, :password, :system_id, :hidden)
+      params.require(:route).permit(:kind, :http_method, :uri, :xml_validator_id, :operation_name, :enforce_http_basic_auth, :username, :password, :system_id, 
+      :hidden, :nonce_matcher_id, :chained_route_id, :chain_matcher_id, :nonce_expire_after)
     end
 
 end
