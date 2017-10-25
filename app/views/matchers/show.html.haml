@@ -11,6 +11,11 @@
         .tbody
           %tr
             %th{:style=>'text-align:left;'}
+              Type
+            %td{:style=>'text-align:left;'}
+              = @matcher.matcher_type
+          %tr
+            %th{:style=>'text-align:left;'}
               Name
             %td{:style=>'text-align:left;'}
               = @matcher.name

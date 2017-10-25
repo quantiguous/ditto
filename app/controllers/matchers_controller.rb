@@ -66,7 +66,7 @@ class MatchersController < ApplicationController
   private
     # Never trust parameters from the scary internet, only allow the white list through.
     def matcher_params
-      params.require(:matcher).permit(:route_id, :name, :scenario, matches_attributes: [:id, :kind, :expression, :eval_criteria, :value, :_destroy], 
-                                      responses_attributes: [:id, :content_type, :response, :status_code, :xsl_id, :fault_code, :fault_reason, :kind, :_destroy])
+      params.require(:matcher).permit(:route_id, :name, :scenario, :matcher_type, matches_attributes: [:id, :kind, :expression, :eval_criteria, :value, :apply_on, :_destroy], 
+                                      responses_attributes: [:id, :content_type, :response, :status_code, :xsl_id, :fault_code, :fault_reason, :kind, :xsl_on_kind, :xsl_on_value, :xsl_params, :_destroy])
     end
 end

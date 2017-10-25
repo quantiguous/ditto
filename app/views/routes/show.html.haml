@@ -36,6 +36,8 @@
 %table.table.table-bordered.table-striped.table-hover
   .thead
     %th{:style=>'text-align:left; background-color: lightblue;'}
+      Type
+    %th{:style=>'text-align:left; background-color: lightblue;'}
       Matcher Name
     %th{:style=>'text-align:left; background-color: lightblue;'}
       Scenario
@@ -46,10 +48,32 @@
     - @route.matchers.each do |matcher|
       %tr
         %td{:style=>'text-align:left;'}
+          = 'Matcher'
+        %td{:style=>'text-align:left;'}
           = matcher.name
         %td{:style=>'text-align:left;'}
           = matcher.scenario
         %td{:style=>'text-align:left;'}
           = link_to 'View' , matcher
+    - if @nonce_matcher.present?
+      %tr
+        %td{:style=>'text-align:left;'}
+          = 'NONCE'
+        %td{:style=>'text-align:left;'}
+          = @nonce_matcher.name
+        %td{:style=>'text-align:left;'}
+          = @nonce_matcher.scenario
+        %td{:style=>'text-align:left;'}
+          = link_to 'View' , @nonce_matcher
+    - if @chain_matcher.present?
+      %tr
+        %td{:style=>'text-align:left;'}
+          = 'CHAIN'
+        %td{:style=>'text-align:left;'}
+          = @chain_matcher.name
+        %td{:style=>'text-align:left;'}
+          = @chain_matcher.scenario
+        %td{:style=>'text-align:left;'}
+          = link_to 'View', @chain_matcher
 					
 = link_to "Show Requests Logs", request_logs_path(route_id: @route.id)					

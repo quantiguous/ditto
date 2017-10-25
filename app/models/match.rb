@@ -1,6 +1,20 @@
 class Match < ActiveRecord::Base
   belongs_to :matcher
   
+  validate :check_apply_on
+  
+  def check_apply_on
+    errors.add(:apply_on, ": Kind should be Body when Apply-On is Chained Request for a Rule") if apply_on == 'CHAINED-REQUEST' && kind != 'body'
+  end
+
+  def self.options_for_apply_on
+    [['REQUEST','REQUEST'], ['CHAINED-REQUEST','CHAINED-REQUEST'], ['CHAINED-RESPONSE','CHAINED-RESPONSE']]
+  end
+  
+  # def apply_on
+  #   return 'REQUEST'
+  # end
+  
   def self.options_for_eval_criteria
     [['Exists','exists'], ['Equal To','equal_to'], ['Starts With','starts_with'], ['Contains','contains'], ['Ends With','ends_with'], ['Xpath','xpath']]
   end
@@ -26,7 +40,6 @@ class Match < ActiveRecord::Base
     end
     requestString
   end  
-  
 
 
   def evaluate(content_type, req, headers, query_params)

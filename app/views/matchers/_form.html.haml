@@ -9,6 +9,10 @@
           %li= message
   .control-group
     .fields
+      = f.label :type, :class => 'control-label'
+      = f.select :matcher_type, options_for_select(Matcher.options_for_type, f.object.matcher_type)
+  .control-group
+    .fields
       = f.label :name, :class => 'control-label'
       = f.text_field :name, :style=>"width: 30%;"
   .control-group
@@ -22,11 +26,14 @@
       %table#Matches
         = f.fields_for :matches, :wrapper => false do |rule_form|
           %tr
+            %th ApplyOn          
             %th Kind
             %th XPath
             %th Criteria
             %th Exp Value
           %tr.fields
+            %td= rule_form.select :apply_on, options_for_select(Match.options_for_apply_on, rule_form.object.apply_on)
+                      
             %td= rule_form.select :kind, options_for_select(Match.options_for_kind, rule_form.object.kind)
 
             %td= rule_form.text_field :expression
@@ -47,6 +54,9 @@
             %th Kind
             %th Response
             %th XSL
+            %th XSL On (kind)
+            %th XSL On (name of element or param)
+            %th XSL Params
             %th Fault Code
             %th Fault Reason
             %th Status Code
@@ -55,9 +65,15 @@
             
             %td= response_form.select :kind, options_for_select(Response::KIND, response_form.object.kind), {}, {class: 'kind_select', onchange: 'toggle_response_blocks(this)', style: "width:150px"}
 
-            %td= response_form.text_area :response, :style=>"width: 270px; height: 60px;", class: 'response_xml_text', disabled: true
+            %td= response_form.text_area :response, :style=>"width: 270px; height: 60px;", class: 'response_xml_text'
             
             %td= response_form.select :xsl_id, Xsl.all.map { |key, value| [key.name, key.id] }, { include_blank: 'Select'}, {class: 'xsl_select', disabled: true, style: "width:150px"}
+            
+            %td= response_form.select :xsl_on_kind, options_for_select(Response::XSL_KIND, response_form.object.xsl_on_kind), { include_blank: 'Select'}, {class: 'xsl_select', disabled: true, style: "width:150px"}
+            
+            %td= response_form.text_field :xsl_on_value, class: 'xsl_select', disabled: true
+            
+            %td= response_form.text_area :xsl_params, :style=>"width: 270px; height: 60px;", class: 'xsl_select', disabled: true, placeholder: '{ "param1" : "value1", "param2" : "value2" }'
 
             %td= response_form.text_field :fault_code, class: 'fault_text', disabled: true
             
@@ -72,7 +88,7 @@
     = f.submit "Create Matcher", :class => "btn"
 
 :javascript
-      
+
   function toggle_response_blocks(ele) {
     var select_val = $(ele).val();
     var parent_block = $(ele).parent().parent();
@@ -93,3 +109,7 @@
       $(parent_block).find('.response_xml_text').prop('disabled', true);
     }
   }
+  
+  $('#matcher_form').bind('submit', function() {
+      $(this).find(':input').removeAttr('disabled');
+  });
