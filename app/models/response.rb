@@ -67,15 +67,14 @@ class Response < ActiveRecord::Base
     
     if xsl.present?
       if xsl_on_kind == 'body'
-        doc1 = Nokogiri::XML(req_doc.to_xml)
-        doc2 = Nokogiri::XML(chained_req.to_xml) unless chained_req.nil? 
-        doc3 = Nokogiri::XML(chained_rep.to_xml) unless chained_rep.nil?
-
-        xsl_on = Nokogiri::XML("<q:ditto xmlns:q='http://www.quantiguous.com/ditto'><q:req/><q:chained><q:req/><q:rep/></q:chained></q:ditto>")
-
-        xsl_on.at('//q:ditto/q:req', 'q' => 'http://www.quantiguous.com/ditto') << doc1.root.children
-        xsl_on.at('//q:ditto/q:chained/q:req', 'q' => 'http://www.quantiguous.com/ditto') << doc2.root.children unless doc2.nil?
-        xsl_on.at('//q:ditto/q:chained/q:rep', 'q' => 'http://www.quantiguous.com/ditto') << doc3.root.children unless doc3.nil?
+        unless chained_req.nil? and chained_rep.nil?
+           xsl_on = Nokogiri::XML("<q:ditto xmlns:q='http://www.quantiguous.com/ditto'><q:req/><q:chained><q:req/><q:rep/></q:chained></q:ditto>")
+           xsl_on.at('//q:ditto/q:req', 'q' => 'http://www.quantiguous.com/ditto') << req_doc.to_xml
+           xsl_on.at('//q:ditto/q:chained/q:req', 'q' => 'http://www.quantiguous.com/ditto') << chained_req.to_xml unless chained_req.nil?
+           xsl_on.at('//q:ditto/q:chained/q:rep', 'q' => 'http://www.quantiguous.com/ditto') << chained_rep.to_xml unless chained_rep.nil?
+        else
+           xsl_on = req_doc
+        end
       else
         xsl_on = Nokogiri::XML(params[xsl_on_value])
       end
