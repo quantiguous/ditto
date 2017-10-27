@@ -13,11 +13,10 @@ class Response < ActiveRecord::Base
   
   validate :check_response_kind
   
-  def to_hash(route_id, req_doc, params, chained_req = nil, chained_rep = nil)
+  def to_hash(route_id, req_doc, params, chained_req = nil, chained_rep = nil, chained_req_datetime = nil)
     body = build_body(req_doc, params, chained_req, chained_rep)
-    return {:route_id => route_id, :status_code => status_code, :response => self, :response_text => Liquid::Template.parse(body).render}
+    return {:route_id => route_id, :status_code => status_code, :response => self, :response_text => Liquid::Template.parse(body).render('requestDate' => chained_req_datetime)}
   end
-
   
   def self.options_for_content_type
     [['text/plain','text/plain'], ['text/xml','text/xml'], ['application/json','application/json'], 
