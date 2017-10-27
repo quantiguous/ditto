@@ -95,7 +95,8 @@ class ApiController < ApplicationController
               body: route.chained_route.parse_request(chained_call.request, chained_call.content_type),
               content_type: chained_call.content_type,
               headers: [],
-              params: {}
+              params: {},
+              req_datetime: formatted_date(chained_call.created_at)
             }
             chained_rep = {
               body: route.chained_route.parse_request(chained_call.response, chained_call.rep_content_type),
@@ -164,5 +165,9 @@ class ApiController < ApplicationController
         nonce.save!
       end
     end    
+  end
+  
+  def formatted_date(date)
+    date.try(:strftime, "%Y-%m-%dT%I:%M:%S")
   end
 end

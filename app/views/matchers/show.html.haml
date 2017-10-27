@@ -51,36 +51,44 @@
       %table.table.table-bordered.table-striped.table-hover
         .thead
           %th{:style=>'text-align:left; background-color: lightblue;'}
+            Kind
+          %th{:style=>'text-align:left; background-color: lightblue;'}
             Content Type
           %th{:style=>'text-align:left; background-color: lightblue;'}
             Status Code
+          %th{:style=>'text-align:left; background-color: lightblue;'}
+            XSL
           %th{:style=>'text-align:left; background-color: lightblue;'}
             Response
         .tbody
           - @responses.each do |resp|
             %tr
               %td{:style=>'text-align:left;'}
+                = resp.kind
+              %td{:style=>'text-align:left;'}
                 = resp.content_type
               %td{:style=>'text-align:left;'}
                 = resp.status_code
               %td{:style=>'text-align:left;'}
-                / = link_to "Show Response", "#", :class => 'response-link', :href => "#responseText", data: { response: resp.response }
-                = resp.response
+                = resp.xsl.present? ? resp.xsl.name : '-'
+              %td{:style=>'text-align:left;'}
+                = link_to "Show Response", "#", :class => 'response-link', :href => "javascript:void(0);", data: { response: resp.response }
+                / = resp.response
 								
-#responseText.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
-  .modal-header
-    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
-    %h3 Response
-    #error_message{:style => 'color:red'}
-  .modal-body{:style => "max-height:450px;"}
-    .demo-area
-    %pre#responseText{:style => 'word-wrap: break-word'}
-      .response{:style => 'word-wrap: break-word'}
-			
+/ #requestText.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+/   .modal-header
+/     %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+/     %h3 Response
+/     #error_message{:style => 'color:red'}
+/   .modal-body{:style => "max-height:450px;"}
+/     .demo-area
+/       %button#d_clip_button1.my_clip_button1{"data-clipboard-target" => "req_xml"}
+/         %b Copy To Clipboard...
+/     %pre#req_xml{:style => 'word-wrap: break-word'}
+/       .response{:style => 'word-wrap: break-word'}
+		
 :javascript
   $(".response-link").on("click", function () {
-    // alert("hi");
     var reply = $(this).data('response');
-    $(".response").text(reply);
-    $('#responseText').modal();
+    alert(reply);
   });

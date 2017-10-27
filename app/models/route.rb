@@ -98,7 +98,11 @@ class Route < ActiveRecord::Base
     #   return {:route_id => self.id, :status_code => '500', :response => nil, :response_text => "Schema validation error : #{response[:error]}" }
     else
       begin
-        return response.to_hash(self.id, req[:body], req[:params], (chained_req.present? ? chained_req[:body] : nil), (chained_rep.present? ? chained_rep[:body] : nil))
+        chained_request = chained_req.present? ? chained_req[:body] : nil
+        chained_reply = chained_rep.present? ? chained_rep[:body] : nil
+        chained_req_datetime = chained_req.present? ? chained_req[:req_datetime] : nil
+
+        return response.to_hash(self.id, req[:body], req[:params], chained_request, chained_reply, chained_req_datetime)
       rescue Exception => e
         return {:route_id => self.id, :status_code => '505', :response => nil, :response_text => "Failed In Building Response #{e.message}" }
       end
