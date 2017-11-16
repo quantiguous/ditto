@@ -20,6 +20,9 @@
       .fields
         = f.label :kind, "Kind", :class => 'control-label'
         = f.select :kind, options_for_select(Route.options_for_kind, @route.kind)
+        %span{style: 'color: #666666'}
+          Support JSON?
+        = f.check_box :support_json, {},"Y","N"
     .control-group
       = f.label :system_id, "System", :class => 'control-label'
       = f.select :system_id, System.all.collect { |p| [ p.name, p.id ] }

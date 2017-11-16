@@ -88,7 +88,7 @@ class RoutesController < ApplicationController
   private
     def route_params
       params.require(:route).permit(:kind, :http_method, :uri, :xml_validator_id, :operation_name, :enforce_http_basic_auth, :username, :password, :system_id, 
-      :hidden, :nonce_matcher_id, :chained_route_id, :chain_matcher_id, :nonce_expire_after)
+      :hidden, :nonce_matcher_id, :chained_route_id, :chain_matcher_id, :nonce_expire_after, :support_json)
     end
 
 end

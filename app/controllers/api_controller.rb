@@ -14,7 +14,13 @@ class ApiController < ApplicationController
     # we find matching routes for a SOAP (if SOAPAction is present) , and non SOAP routes in other cases
     # requests necessarily need to send a SOAPAction header. if they need to match a SOAP Route
     if request.env['HTTP_SOAPACTION'].present? and request.env['HTTP_SOAPACTION'] != '""'
-      route = Route.find_by(:uri => request.path, :http_method => request.method, :kind => 'SOAP', :operation_name => request.env['HTTP_SOAPACTION'].gsub(/\"/, ""))
+      if request.content_type.include?("soap") || request.content_type.include?("xml")
+        route = Route.find_by(:uri => request.path, :http_method => request.method, :kind => 'SOAP', :operation_name => request.env['HTTP_SOAPACTION'].gsub(/\"/, ""))
+      elsif request.content_type.include?("json")
+        route = Route.find_by(:uri => request.path, :http_method => request.method, :kind => 'SOAP', :operation_name => request.env['HTTP_SOAPACTION'].gsub(/\"/, ""), support_json: 'Y')
+      else
+        route = nil
+      end
     end
     if route.nil?
       # the first segment cannot be a variable
