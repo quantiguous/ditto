@@ -18,31 +18,32 @@ class ApiController < ApplicationController
     end
 
     if route.nil?
-      # the first segment cannot be a variable
-      segments = request.path.split('/')
-      if segments.count < 3
-        # we didnt get enough segments, so we do a direct match
-        route = Route.where(:uri => request.path, :http_method => request.method).where.not(:kind => 'SOAP').first
-        if route.nil? && request.content_type.include?("json")
-          begin
+      begin
+        # the first segment cannot be a variable
+        segments = request.path.split('/')
+        if segments.count < 3
+          # we didnt get enough segments, so we do a direct match
+          route = Route.where(:uri => request.path, :http_method => request.method).where.not(:kind => 'SOAP').first
+          if route.nil? && request.content_type.include?("json")
             json_req = JSON.parse(input_data)
             route = Route.find_by(:uri => request.path, :http_method => request.method, :kind => 'SOAP', :operation_name => json_req.keys.first, support_json: 'Y')
-          rescue
-            return {error: 'Parsing failed, invalid JSON'}
+          end
+        else
+          # we have atleast 2 segments, the first segment is not variable
+          segment_1 = '/' + segments[1] + '%'
+          routes = Route.where(:http_method => request.method).where("uri LIKE ?", segment_1).where.not(:kind => 'SOAP')
+          matched_routes = routes.select { |route|
+            # a variable segment can have word characters and a dot
+            regex = Regexp.new('^' + route.uri.gsub(/{[\w|\.]+}/,'[\w|\.|-|~|:|\?|#|\[|\]|@|!|\$|&|\'|\(|\)|\*|\+|,|;|=]+') + '$') 
+            !regex.match(request.path).nil?
+          }
+          if matched_routes.count > 0
+            route = matched_routes.first
           end
         end
-      else
-        # we have atleast 2 segments, the first segment is not variable
-        segment_1 = '/' + segments[1] + '%'
-        routes = Route.where(:http_method => request.method).where("uri LIKE ?", segment_1).where.not(:kind => 'SOAP')
-        matched_routes = routes.select { |route|
-          # a variable segment can have word characters and a dot
-          regex = Regexp.new('^' + route.uri.gsub(/{[\w|\.]+}/,'[\w|\.|-|~|:|\?|#|\[|\]|@|!|\$|&|\'|\(|\)|\*|\+|,|;|=]+') + '$') 
-          !regex.match(request.path).nil?
-        }
-        if matched_routes.count > 0
-          route = matched_routes.first
-        end
+      rescue
+        render status: 400, text: "Bad Request."
+        return
       end
     end
     
