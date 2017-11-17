@@ -69,5 +69,13 @@ module Ditto
     end
 
     config.active_job.queue_adapter = :delayed_job
+    
+    # allow cors
+    config.middleware.insert_before 0, "Rack::Cors" do
+      allow do
+        origins 'https://editor.swagger.io'
+        resource '*', :headers => :any, :methods => [:get, :post, :options]
+      end
+    end
   end
 end
